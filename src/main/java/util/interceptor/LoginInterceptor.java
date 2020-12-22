@@ -28,11 +28,13 @@ public class LoginInterceptor implements HandlerInterceptor {
     }
 
     //在请求处理方法执行之后执行
+    @Override
     public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, ModelAndView modelAndView) throws Exception {
 
     }
 
     //在dispatcherServlet处理后执行,做清理工作.
+    @Override
     public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) throws Exception {
 
     }
