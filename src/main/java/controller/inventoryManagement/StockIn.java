@@ -1,2 +1,4 @@
-package controller.inventoryManagement;public class StockIn {
+package controller.inventoryManagement;
+
+public class StockIn {
 }

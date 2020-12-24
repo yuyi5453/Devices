@@ -1,2 +1,4 @@
-package controller.maintenanceReportManagement;public class PostConfirmationForm {
+package controller.maintenanceReportManagement;
+
+public class PostConfirmationForm {
 }

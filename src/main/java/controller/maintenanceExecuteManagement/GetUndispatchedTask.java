@@ -1,2 +1,4 @@
-package controller.maintenanceExecuteManagement;public class GetUndispatchedTask {
+package controller.maintenanceExecuteManagement;
+
+public class GetUndispatchedTask {
 }

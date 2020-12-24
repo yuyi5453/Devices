@@ -1,2 +1,4 @@
-package controller.maintenanceExecuteManagement;public class EditTaskInfo {
+package controller.maintenanceExecuteManagement;
+
+public class EditTaskInfo {
 }

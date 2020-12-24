@@ -1,2 +1,4 @@
-package controller.customerManagement;public class EditCustomerInfo {
+package controller.customerManagement;
+
+public class EditCustomerInfo {
 }

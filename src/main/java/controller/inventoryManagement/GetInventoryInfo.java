@@ -1,2 +1,4 @@
-package controller.inventoryManagement;public class GetInventoryInfo {
+package controller.inventoryManagement;
+
+public class GetInventoryInfo {
 }

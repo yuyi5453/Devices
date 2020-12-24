@@ -1,2 +1,4 @@
-package controller.checkoutManagement;public class GetCheckoutInfo {
+package controller.checkoutManagement;
+
+public class GetCheckoutInfo {
 }

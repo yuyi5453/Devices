@@ -1,2 +1,4 @@
-package controller.maintenanceExecuteManagement;public class DispatchTask {
+package controller.maintenanceExecuteManagement;
+
+public class DispatchTask {
 }
