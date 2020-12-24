@@ -22,6 +22,9 @@ import lombok.EqualsAndHashCode;
 public class RepairRecord implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    private static final int INPROCESS = 1;
+    private static final int FINISHED = 2;
+    private static final int REVOKE = 3;
 
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;

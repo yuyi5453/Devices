@@ -22,8 +22,21 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class ServiceRecord implements Serializable {
 
+    /**
+     * 维修状态
+     */
     private static final long serialVersionUID = 1L;
+    private static final int UNASSIGNED = 1;
+    private static final int ASSIGNED = 2;
+    private static final int REPAIRED = 3;
+    private static final int REVOKE = 4;
 
+    /**
+     * 维修延迟程度
+     */
+    private static final int NORMAL = 1;
+    private static final int MIDDLE = 2;
+    private static final int SERIOUS = 3;
 
 
     @TableId(value = "id", type = IdType.AUTO)
