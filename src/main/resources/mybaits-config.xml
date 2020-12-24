@@ -16,6 +16,5 @@
     
     
     <mappers>
-        <mapper resource="mapper/xml/ResumeInfoMapper.xml"/>
     </mappers>
 </configuration>

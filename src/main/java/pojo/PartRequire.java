@@ -20,6 +20,8 @@ import lombok.EqualsAndHashCode;
 public class PartRequire implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    private static final long UNFINISHED = 0;
+    private static final long FINISHED = 1;
 
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
@@ -36,5 +38,6 @@ public class PartRequire implements Serializable {
 
     private Integer num;
 
+    private Integer status;
 
 }
