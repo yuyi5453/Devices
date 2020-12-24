@@ -1,10 +1,13 @@
 package service.impl;
 
+import com.sun.xml.internal.org.jvnet.fastinfoset.RestrictedAlphabet;
 import pojo.Customer;
 import mapper.CustomerMapper;
 import service.CustomerService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+import util.json.RestResult;
+import util.json.ResultCode;
 
 /**
  * <p>
@@ -17,4 +20,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> implements CustomerService {
 
+    @Override
+    public String updateCustomer(Customer customer) {
+        if(customer.getId()!=null) {
+            this.updateById(customer);
+        }
+        else{
+            this.save(customer);
+        }
+        return new RestResult().setMessage("更新成功").setCode(ResultCode.SUCCESS).toString();
+    }
 }
