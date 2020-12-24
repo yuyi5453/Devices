@@ -1,2 +1,4 @@
-package controller.customerManagement;public class DeleteCustomerInfo {
+package controller.customerManagement;
+
+public class DeleteCustomerInfo {
 }

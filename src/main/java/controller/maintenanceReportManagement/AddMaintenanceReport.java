@@ -1,2 +1,4 @@
-package controller.maintenanceReportManagement;public class AddMaintenanceReport {
+package controller.maintenanceReportManagement;
+
+public class AddMaintenanceReport {
 }
