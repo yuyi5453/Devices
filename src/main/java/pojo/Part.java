@@ -23,10 +23,10 @@ public class Part implements Serializable {
     /**
      * 库存状态
      */
-    private static final int NORMAL = 1;
-    private static final int CRITICAL = 2;
-    private static final int WARNING = 3;
-    private static final int SHORT = 3;
+    public static final int NORMAL = 1;
+    public static final int CRITICAL = 2;
+    public static final int WARNING = 3;
+    public static final int SHORT = 4;
 
 
 
