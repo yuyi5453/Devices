@@ -13,8 +13,7 @@
     <typeAliases>
         <package name="com.ding.pojo"/>
     </typeAliases>
-    
-    
+
     <mappers>
     </mappers>
 </configuration>
