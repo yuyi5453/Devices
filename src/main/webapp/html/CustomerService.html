@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="height: 100%;">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -7,27 +7,24 @@
     <!-- 引入样式 -->
     <link rel="stylesheet" href="https://unpkg.zhimg.com/element-ui@2.14.1/lib/theme-chalk/index.css">
 </head>
-<body>
-<div id="app">
-    <el-container>
-        <el-header></el-header>
-        <el-container>
-            <el-aside>
-                <el-container>
-                    <el-main>
-                        <nav-bar @select-change="handleSelectChange"></nav-bar>
-                    </el-main>
-                    <el-footer>
+<body style="height: 100%; margin: 0">
+<div id="app" style="height: 100%">
+    <el-container :style="{height: '100%', overflow: 'hidden'}">
+        <el-aside :style="{background: '#545c64'}">
+            <el-container>
+                <el-main>
+                    <nav-bar @select-change="handleSelectChange"></nav-bar>
+                </el-main>
+                <el-footer>
 
-                    </el-footer>
-                </el-container>
-            </el-aside>
-            <el-main>
-                <new-maintenance-report v-show="visible.newMaintenanceReport.value"></new-maintenance-report>
-                <new-customer-info v-show="visible.newCustomerInfo.value"></new-customer-info>
-                <manipulate-customer-info v-show="visible.manipulateCustomerInfo.value"></manipulate-customer-info>
-            </el-main>
-        </el-container>
+                </el-footer>
+            </el-container>
+        </el-aside>
+        <el-main :style="{height: '100%', overflow: 'auto'}">
+            <div style="padding: 20px;">
+                <component :is="activeComponentName"></component>
+            </div>
+        </el-main>
     </el-container>
 </div>
 <!-- Vue -->
@@ -36,15 +33,18 @@
 <script src="https://unpkg.zhimg.com/element-ui/lib/index.js"></script>
 <!-- 引入axios -->
 <script src="https://unpkg.zhimg.com/axios/dist/axios.min.js"></script>
-<!-- 用户信息组件 -->
+<!-- 用户信息组件
+     接收数据：prop:{info}
+     发送数据：post-customer-info
+-->
 <template id="customerInfo">
-    <div>
+    <div @mouseleave="postInfo">
         <el-row :gutter="20">
             <el-col :span="16">
-                <el-input v-model="idCard" placeholder="身份证号"></el-input>
+                <el-input v-model="idcard" placeholder="身份证号"></el-input>
             </el-col>
             <el-col :span="8">
-                <el-select v-model="customerType" clearable="true" placeholder="用户性质">
+                <el-select v-model="customerType" clearable placeholder="用户性质">
                     <el-option
                             v-for="option in customerTypeOptions"
                             :key="option.value"
@@ -60,10 +60,16 @@
                 <el-input v-model="companyName" placeholder="单位名称"></el-input>
             </el-col>
             <el-col :span="8">
-                <el-input v-model="phoneNumber" placeholder="联系方式"></el-input>
+                <el-input v-model="phone" placeholder="联系方式"></el-input>
             </el-col>
             <el-col :span="8">
                 <el-input v-model="customerName" placeholder="联系人"></el-input>
+            </el-col>
+        </el-row>
+        <br>
+        <el-row :gutter="20">
+            <el-col :span="24">
+                <el-input v-model="email" placeholder="e-mail"></el-input>
             </el-col>
         </el-row>
         <br>
@@ -79,7 +85,7 @@
         template: '#customerInfo',
         data: function (){
             return{
-                idCard: '',
+                idcard: '',
                 customerType: '',
                 customerTypeOptions: [{
                     label: '家庭用户',
@@ -95,40 +101,118 @@
                     value: '签约用户'
                 }],
                 companyName: '',
-                phoneNumber: '',
+                phone: '',
                 customerName: '',
+                email: '',
                 address:''
             }
         },
         props: [
-            'row'
+            'info'
         ],
         methods: {
-
+            postInfo: function (){
+                var info = {
+                    idcard: this.idcard,
+                    customerType: this.customerType,
+                    companyName: this.companyName,
+                    phone: this.phone,
+                    customerName: this.customerName,
+                    email: this.email,
+                    address: this.address
+                };
+                this.$emit('post-customer-info',info);
+            }
         },
         watch: {
-            row (){
-                this.idCard = this.row.idCard;
-                this.customerType = this.row.customerType;
-                this.companyName = this.row.companyName;
-                this.phoneNumber = this.row.phoneNumber;
-                this.customerName = this.row.customerName;
-                this.address = this.row.address;
+            info (){
+                this.idcard = this.info.idcard;
+                this.customerType = this.info.customerType;
+                this.companyName = this.info.companyName;
+                this.phone = this.info.phone;
+                this.customerName = this.info.customerName;
+                this.email = this.info.email;
+                this.address = this.info.address;
             }
         }
     }
 </script>
-<!-- 用户信息显示组件 -->
+
+<!-- 用户信息显示组件
+     接收数据：prop:{info}
+     发送数据：post-customer-info
+-->
 <template id="customerInfoReadOnly">
     <div>
         <el-row :gutter="20">
-            <el-col span="6">
-                <p>客户编号{{customerId}}</p>
+            <el-col :span="8">
+                <p>身份证号：{{idcard}}</p>
+            </el-col>
+            <el-col :span="8">
+                <p>客户类型：{{customerType}}</p>
+            </el-col>
+            <el-col :span="8">
+                <p>单位名称：{{companyName}}</p>
+            </el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="8">
+                <p>联系人：{{customerName}}</p>
+            </el-col>
+            <el-col :span="8">
+                <p>联系电话：{{phone}}</p>
+            </el-col>
+            <el-col :span="8">
+                <p>e-mail：{{email}}</p>
+            </el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="16">
+                <p>地址：{{address}}</p>
             </el-col>
         </el-row>
     </div>
 </template>
-<!-- 用户筛选器组件 -->
+<script>
+    var customerInfoReadOnly = {
+        template: '#customerInfoReadOnly',
+        data: function () {
+            return {
+                idcard: '',
+                customerType: '',
+                companyName: '',
+                customerName: '',
+                phone: '',
+                email: '',
+                address: ''
+            }
+        },
+        methods: {
+            postInfo: function (){
+                var info = {};
+                this.$emit('post-customer-info',info);
+            }
+        },
+        props: [
+            'info'
+        ],
+        watch: {
+            info() {
+                this.idcard = this.info.idcard;
+                this.customerType = this.info.customerType;
+                this.companyName = this.info.companyName;
+                this.customerName = this.info.customerName;
+                this.phone = this.info.phone;
+                this.email = this.info.email;
+                this.address = this.info.address;
+            }
+        }
+    }
+</script>
+
+<!-- 用户筛选器组件
+     发送数据：post-row
+-->
 <template id="customerFilter">
     <div>
         <el-row :gutter="20">
@@ -148,30 +232,49 @@
                     stripe
                     :data="customerData"
                     highlight-current-row
-                    @current-change="handleCurrentChange">
+                    @row-click="handleCurrentChange"
+                    width="100%">
                     <el-table-column
-                        type="index"
-                        width="50">
-                    </el-table-column>
+                            type="index"
+                            fixed="left"
+                            width="50"
+                    ></el-table-column>
                     <el-table-column
-                        label="客户编号"
-                        prop="customerId"
-                        width="100">
-                    </el-table-column>
+                            label="联系人"
+                            prop="customerName"
+                            fixed="left"
+                            width="100"
+                    ></el-table-column>
                     <el-table-column
-                        label="联系人"
-                        prop="customerName"
-                        width="100">
-                    </el-table-column>
+                            label="移动电话"
+                            prop="phone"
+                            fixed="left"
+                            width="100"
+                    ></el-table-column>
                     <el-table-column
-                        label="移动电话"
-                        prop="phoneNumber"
-                        width="100">
-                    </el-table-column>
+                            label="身份证号"
+                            prop="idcard"
+                            width="150"
+                    ></el-table-column>
                     <el-table-column
-                        label="客户性质"
-                        prop="customerType">
-                    </el-table-column>
+                            label="客户性质"
+                            prop="customerType"
+                            width="100"
+                    ></el-table-column>
+                    <el-table-column
+                            label="单位名称"
+                            prop="companyName"
+                            width="150"
+                    ></el-table-column>
+                    <el-table-column
+                            label="e-mail"
+                            prop="email"
+                            width="150"
+                    ></el-table-column>
+                    <el-table-column
+                            label="地址"
+                            prop="address"
+                    ></el-table-column>
                 </el-table>
             </el-col>
         </el-row>
@@ -186,14 +289,22 @@
                 phoneNumber: '',
                 customerData: [{
                     customerId: '1',
+                    idcard: '330424199901010011',
+                    customerType: '家庭用户',
+                    companyName: '大连海事大学',
+                    phone: '12312312123',
                     customerName: 'jack',
-                    phoneNumber: '12312312123',
-                    customerType: '家庭用户'
+                    email: '123456@163.com',
+                    address: '大连市凌海路1号'
                 },{
                     customerId: '2',
+                    idcard: '330424199909090099',
+                    customerType: '单位用户',
+                    companyName: '大连理工大学',
+                    phone: '45645645456',
                     customerName: 'rob',
-                    phoneNumber: '45645645456',
-                    customerType: '单位用户'
+                    email: '654321@163.com',
+                    address: '大连市凌工路1号'
                 }],
                 currentRow:{}
             }
@@ -202,18 +313,21 @@
             handleCurrentChange: function (currentRow, oldCurrentRow){
                 this.currentRow = currentRow;
                 this.$emit('post-row',this.currentRow);
-                console.log("handelCurrentChange:")
-                console.log(this.currentRow);
+                //console.log("handelCurrentChange:")
+                //console.log(this.currentRow);
             }
         }
     }
 </script>
-<!-- 设备信息组件 -->
+
+<!-- 设备信息组件
+     发送数据：post-device-info
+-->
 <template id="deviceInfo">
-    <div>
+    <div @mouseleave="postInfo">
         <el-row :gutter="20">
             <el-col :span="6">
-                <el-select v-model="deviceType" clearable="true" placeholder="请选择设备类型">
+                <el-select v-model="deviceType" clearable placeholder="请选择设备类型">
                     <el-option
                             v-for="option in deviceTypeOptions"
                             :key="option.value"
@@ -228,20 +342,22 @@
             <el-col :span="6">
                 <el-input v-model="deviceModel" placeholder="设备型号"></el-input>
             </el-col>
-            <el-col span="6">
+            <el-col :span="6">
                 <el-input v-model="deviceSeries" placeholder="设备系列号"></el-input>
             </el-col>
         </el-row>
         <br>
+        <!--
         <el-row :gutter="20">
             <el-col :span="24">
                 <el-input v-model="lackedComponent" placeholder="缺少零件"></el-input>
             </el-col>
         </el-row>
         <br>
+        -->
         <el-row :gutter="20">
             <el-col :span="6">
-                <el-select v-model="faultType" clearable="true" placeholder="故障类型">
+                <el-select v-model="faultType" clearable placeholder="故障类型">
                     <el-option
                             v-for="option in faultTypeOptions"
                             :key="option.value"
@@ -252,12 +368,14 @@
             </el-col>
         </el-row>
         <br>
+        <!--
         <el-row :gutter="20">
             <el-col :span="24">
                 <el-input v-model="faultDescription" placeholder="故障描述"></el-input>
             </el-col>
         </el-row>
         <br>
+        -->
         <el-row :gutter="20">
             <el-col :span="8">
                 <el-input v-model="hdd" placeholder="HDD"></el-input>
@@ -305,8 +423,8 @@
                 deviceBrand: '',
                 deviceModel: '',
                 deviceSeries: '',
-                lackedComponent: '',
-                faultDescription: '',
+                //lackedComponent: '',
+                //faultDescription: '',
                 faultType: '',
                 faultTypeOptions: [{
                     label: '固定性故障',
@@ -323,13 +441,32 @@
             }
         },
         methods: {
-
+            postInfo: function (){
+                var info = {
+                    deviceType: this.deviceType,
+                    deviceBrand: this.deviceBrand,
+                    deviceModel: this.deviceModel,
+                    deviceSeries: this.deviceSeries,
+                    lackedComponent: this.lackedComponent,
+                    faultType: this.faultType,
+                    faultDescription: this.faultDescription,
+                    hdd: this.hdd,
+                    ram: this.ram,
+                    ACadapter: this.ACadapter,
+                    battery: this.battery,
+                    CDROM: this.CDROM
+                };
+                this.$emit('post-device-info',info);
+            }
         }
     }
 </script>
-<!-- 报修信息组件 -->
+
+<!-- 报修信息组件
+
+-->
 <template id="reportInfo">
-    <div>
+    <div @mouseleave="postInfo">
         <el-row :gutter="20">
             <el-col :span="8">
                 <el-input v-model="reportTime" placeholder="报修时间"></el-input>
@@ -341,7 +478,7 @@
         <br>
         <el-row :gutter="20">
             <el-col :span="8">
-                <el-select v-model="reportStatus" clearable="true" placeholder="报修状态">
+                <el-select v-model="reportStatus" clearable placeholder="报修状态">
                     <el-option
                             v-for="option in reportStatusOptions"
                             :key="option.value"
@@ -376,33 +513,72 @@
                     value: '撤销'
                 }]
             }
+        },
+        methods: {
+            postInfo: function (){
+                var info = {
+                    reportTime: this.reportTime,
+                    estimateCost: this.estimateCost,
+                    estimateCompleteTime: this.estimateCompleteTime,
+                    reportStatus: this.reportStatus
+                };
+                this.$emit('post-report-info',info);
+            }
         }
     }
 </script>
+
 <!-- 新建报修记录功能模块
-     组件：1.用户信息组件
-          2.设备信息组件
-          3.报修信息组件
+     组件：1.用户信息显示组件
+          2.用户筛选器组件
+          3.设备信息组件
+          4.报修信息组件
 -->
 <template id="newMaintenanceReport">
     <div>
-        <el-row>
-            <el-col :span="12">
+        <el-row :gutter="20">
+            <el-col :span="20">
                 <el-row>
                     <el-col :span="22">
                         <h2>新的报修记录</h2>
                     </el-col>
                     <el-col :span="2">
-                        <el-button type="success"> 提 交 </el-button>
+                        <el-button type="success" @click="handleClick"> 提 交 </el-button>
                     </el-col>
                 </el-row>
                 <hr>
-                <h3>用户信息</h3>
-                <customer-info></customer-info>
+                <el-row>
+                    <el-col :span="20">
+                        <h3>用户信息</h3>
+                    </el-col>
+                    <el-col :span="4">
+                        <el-button type="primary" @click="showCustomerFilter">选择客户</el-button>
+                    </el-col>
+                </el-row>
+                <customer-info-readonly
+                        :info="customerInfoData"
+                ></customer-info-readonly>
+                <el-row>
+                    <el-col :span=24>
+                        <div
+                                v-show="visible.filterContainer.value"
+                                :style="style.filterContainer">
+                            <h3>查找用户信息</h3>
+                            <hr>
+                            <customer-filter
+                                    @post-row="handleRow"
+                            ></customer-filter>
+                        </div>
+                    </el-col>
+                </el-row>
                 <h3>设备信息</h3>
-                <device-info></device-info>
+                <device-info
+                        @post-device-info="handleDeviceInfo"
+                ></device-info>
                 <h3>报修信息</h3>
-                <report-info></report-info>
+                <report-info
+                        @post-report-info="handleReportInfo"
+                ></report-info>
             </el-col>
         </el-row>
     </div>
@@ -411,37 +587,67 @@
     var newMaintenanceReport = {
         template: '#newMaintenanceReport',
         components: {
-            'customer-info': customerInfo,
+            'customer-info-readonly': customerInfoReadOnly,
+            'customer-filter': customerFilter,
             'device-info': deviceInfo,
             'report-info': reportInfo
         },
         data: function (){
             return{
-
+                customerInfoData: {},
+                deviceInfoData: {},
+                reportInfoData: {},
+                visible: {
+                    filterContainer: { value: false}
+                },
+                style: {
+                    filterContainer: {
+                        padding: '20px',
+                        boxShadow: '0 2px 12px 0 rgba(0, 0, 0, 0.1)'
+                    }
+                }
             }
         },
         methods: {
-
+            showCustomerFilter: function (){
+                this.visible.filterContainer.value = true;
+            },
+            handleRow: function (info){
+                this.customerInfoData = info;
+                this.visible.filterContainer.value = false;
+            },
+            handleDeviceInfo: function (info){
+                this.deviceInfoData = info;
+            },
+            handleReportInfo: function (info){
+                this.reportInfoData = info;
+            },
+            handleClick: function (){
+                console.log(this.customerInfoData);
+                console.log(this.deviceInfoData);
+                console.log(this.reportInfoData);
+            }
         }
     }
 </script>
+
 <!-- 新建客户信息功能模块
      组件：1.用户信息组件
 -->
 <template id="newCustomerInfo">
     <div>
         <el-row>
-            <el-col :span="12">
+            <el-col :span="20">
                 <el-row>
                     <el-col :span="22">
                         <h2>新的客户信息</h2>
                     </el-col>
                     <el-col :span="2">
-                        <el-button type="success"> 提 交 </el-button>
+                        <el-button type="success" @click="handleClick"> 提 交 </el-button>
                     </el-col>
                 </el-row>
                 <hr>
-                <customer-info></customer-info>
+                <customer-info @post-customer-info="handleCustomerInfo"></customer-info>
             </el-col>
         </el-row>
     </div>
@@ -454,14 +660,21 @@
         },
         data: function (){
             return {
-
+                info: {}
             }
         },
         methods: {
-
+            handleCustomerInfo: function (info){
+                this.info = info;
+                //console.log(this.info);
+            },
+            handleClick: function (){
+                console.log(this.info);
+            }
         }
     }
 </script>
+
 <!-- 维护用户信息功能模块
      组件：1.用户筛选器组件
           2.用户信息组件
@@ -469,22 +682,29 @@
 <template id="manipulateCustomerInfo">
     <div>
         <el-row :gutter="20">
-            <el-col :span="12">
+            <el-col :span="20">
                 <h3>搜索用户信息</h3>
                 <hr>
                 <customer-filter
                         @post-row="handlePostRow">
                 </customer-filter>
             </el-col>
-            <el-col :span="12">
-                <h3>维护用户信息</h3>
-                <hr>
-                <customer-info
-                        :row="row">
-                </customer-info>
-                <br>
-                <el-button type="success">保存</el-button>
-                <el-button type="danger">删除</el-button>
+        </el-row>
+        <br>
+        <el-row>
+            <el-col :span="20">
+                <div
+                        v-show="visible.filterContainer.value"
+                        :style="style.filterContainer">
+                    <h3>维护用户信息</h3>
+                    <hr>
+                    <customer-info
+                            :info="info">
+                    </customer-info>
+                    <br>
+                    <el-button type="success">保存</el-button>
+                    <el-button type="danger">删除</el-button>
+                </div>
             </el-col>
         </el-row>
     </div>
@@ -498,14 +718,24 @@
         },
         data: function (){
             return {
-                row: {}
+                info: {},
+                visible: {
+                    filterContainer: { value: false}
+                },
+                style: {
+                    filterContainer: {
+                        padding: '20px',
+                        boxShadow: '0 2px 12px 0 rgba(0, 0, 0, 0.1)'
+                    }
+                }
             }
         },
         methods: {
-            handlePostRow: function (row){
-                this.row = row;
+            handlePostRow: function (info){
+                this.info = info;
+                this.visible.filterContainer.value = true;
                 console.log("handlePostRow");
-                console.log(this.row);
+                console.log(this.info);
             }
         }
     }
@@ -514,7 +744,11 @@
 <template id="navBar">
     <div>
         <el-menu
-            @select="handleSelect">
+            @select="handleSelect"
+            background-color="#545c64"
+            text-color="#fff"
+            active-text-color="#ffd04b"
+            :style="{border: '0'}">
             <el-submenu index="1">
                 <template slot="title">
                     <i class="el-icon-location"></i>
@@ -575,35 +809,24 @@
             'manipulate-customer-info': manipulateCustomerInfo
         },
         data: {
-            visible: {
-                newMaintenanceReport: {value: false},
-                newCustomerInfo: {value: true},
-                manipulateCustomerInfo: {value: false}
-            },
-            activeComponent: {}
+            activeComponentName: ''
         },
         methods: {
             handleSelectChange: function (selected){
                 console.log(selected);
                 if(selected == '1-1') {
-                    this.activeComponent.value = false;
-                    this.activeComponent = this.visible.newCustomerInfo;
-                    this.activeComponent.value = true;
+                    this.activeComponentName = 'new-customer-info';
                 }
                 if(selected == '1-2') {
-                    this.activeComponent.value = false;
-                    this.activeComponent = this.visible.manipulateCustomerInfo;
-                    this.activeComponent.value = true;
+                    this.activeComponentName = 'manipulate-customer-info'
                 }
                 if(selected == '2-1') {
-                    this.activeComponent.value = false;
-                    this.activeComponent = this.visible.newMaintenanceReport;
-                    this.activeComponent.value = true;
+                    this.activeComponentName = 'new-maintenance-report'
                 }
             }
         },
         mounted(){
-            this.activeComponent = this.visible.newCustomerInfo;
+            this.activeComponentName = 'new-customer-info'
         }
     })
 </script>
