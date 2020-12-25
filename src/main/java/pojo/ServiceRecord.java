@@ -25,11 +25,11 @@ public class ServiceRecord implements Serializable {
     /**
      * 维修状态
      */
-    private static final long serialVersionUID = 1L;
-    private static final int UNASSIGNED = 1;
-    private static final int ASSIGNED = 2;
-    private static final int REPAIRED = 3;
-    private static final int REVOKE = 4;
+    public static final long serialVersionUID = 1L;
+    public static final int UNASSIGNED = 1;
+    public static final int ASSIGNED = 2;
+    public static final int REPAIRED = 3;
+    public static final int REVOKE = 4;
 
     /**
      * 维修延迟程度
@@ -78,4 +78,6 @@ public class ServiceRecord implements Serializable {
      * 维修延迟程度
      */
     private Integer delayDegree;
+
+    private Integer repairManId;
 }

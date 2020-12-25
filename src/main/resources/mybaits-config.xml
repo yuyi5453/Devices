@@ -13,9 +13,5 @@
     <typeAliases>
         <package name="com.ding.pojo"/>
     </typeAliases>
-    
-    
-    <mappers>
-        <mapper resource="mapper/xml/ResumeInfoMapper.xml"/>
-    </mappers>
+
 </configuration>

@@ -9,23 +9,23 @@ import javax.servlet.http.HttpSession;
 
 public class LoginInterceptor implements HandlerInterceptor {
 
-    @Override
-    public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
-        System.out.println(Thread.currentThread().getName());
-        String uri = httpServletRequest.getRequestURI();
-        if(uri.equals("/Job/html/index.html")
-                ||uri.contains("Login")
-                ||uri.contains("Register")){
-            return true;
-        }
-        HttpSession session = httpServletRequest.getSession();
-        Object user = session.getAttribute("user");
-        if(user == null){
-            httpServletResponse.sendRedirect("/Job/html/index.html");
-            return false;
-        }
-        return true;
-    }
+//    @Override
+//    public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
+//        System.out.println(Thread.currentThread().getName());
+//        String uri = httpServletRequest.getRequestURI();
+//        if(uri.equals("/Devices/html/index.html")
+//                ||uri.contains("Login")
+//                ||uri.contains("Register")){
+//            return true;
+//        }
+//        HttpSession session = httpServletRequest.getSession();
+//        Object user = session.getAttribute("user");
+//        if(user == null){
+//            httpServletResponse.sendRedirect("/Devices/html/index.html");
+//            return false;
+//        }
+//        return true;
+//    }
 
     //在请求处理方法执行之后执行
     @Override
