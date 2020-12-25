@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+<body>
+<div id="app">
+    <el-container>
+        <el-header></el-header>
+        <el-container>
+            <el-aside>
+                <el-container>
+                    <el-main>
+
+                    </el-main>
+                    <el-footer>
+
+                    </el-footer>
+                </el-container>
+            </el-aside>
+            <el-main>
+                <new-maintenance-report v-show="visible.newMaintenanceReport"></new-maintenance-report>
+                <new-customer-info v-show="visible.newCustomerInfo"></new-customer-info>
+            </el-main>
+        </el-container>
+    </el-container>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<!-- 用户信息组件 -->
+<template id="customerInfo">
+    <div>
+        <el-row :gutter="20">
+            <el-col :span="8">
+                <el-input v-model="idCard" placeholder="身份证号"></el-input>
+            </el-col>
+            <el-col :span="4">
+                <el-select v-model="customerType" clearable="true" placeholder="用户性质">
+                    <el-option
+                            v-for="option in customerTypeOptions"
+                            :key="option.value"
+                            :label="option.label"
+                            :value="option.value">
+                    </el-option>
+                </el-select>
+            </el-col>
+        </el-row>
+        <br>
+        <el-row :gutter="20">
+            <el-col span="4">
+                <el-input v-model="companyName" placeholder="单位名称"></el-input>
+            </el-col>
+            <el-col span="4">
+                <el-input v-model="phoneNumber" placeholder="联系方式"></el-input>
+            </el-col>
+            <el-col span="4">
+                <el-input v-model="customerName" placeholder="联系人"></el-input>
+            </el-col>
+        </el-row>
+        <br>
+        <el-row :gutter="20">
+            <el-col :span="12">
+                <el-input v-model="address" placeholder="客户地址"></el-input>
+            </el-col>
+        </el-row>
+    </div>
+</template>
+<script>
+    var customerInfo = {
+        template: '#customerInfo',
+        data: function (){
+            return{
+                idCard: '',
+                customerType: '',
+                customerTypeOptions: [{
+                    label: '家庭用户',
+                    value: '家庭用户'
+                },{
+                    label: '单位用户',
+                    value: '单位用户'
+                },{
+                    label: '代理商',
+                    value: '代理商'
+                },{
+                    label: '签约用户',
+                    value: '签约用户'
+                }],
+                companyName: '',
+                phoneNumber: '',
+                customerName: '',
+                address:''
+            }
+        },
+        methods: {
+
+        }
+    }
+</script>
+<!-- 用户筛选器组件 -->
+<template id="customerFilter">
+    <div>
+        <el-row :gutter="20">
+            <el-col :span="4"></el-col>
+            <el-col :span="4"></el-col>
+            <el-col :span="4"></el-col>
+        </el-row>
+        <el-row :gutter="20">
+            <el-col :span="20">
+                <el-table>
+
+                </el-table>
+            </el-col>
+        </el-row>
+    </div>
+</template>
+<script>
+
+</script>
+<!-- 设备信息组件 -->
+<template id="deviceInfo">
+    <div>
+        <el-row :gutter="20">
+            <el-col :span="4">
+                <el-select v-model="deviceType" clearable="true" placeholder="请选择设备类型">
+                    <el-option
+                            v-for="option in deviceTypeOptions"
+                            :key="option.value"
+                            :value="option.value"
+                            :label="option.label">
+                    </el-option>
+                </el-select>
+            </el-col>
+            <el-col :span="4">
+                <el-input v-model="deviceBrand" placeholder="设备品牌"></el-input>
+            </el-col>
+            <el-col :span="4">
+                <el-input v-model="deviceModel" placeholder="设备型号"></el-input>
+            </el-col>
+            <el-col span="4">
+                <el-input v-model="deviceSeries" placeholder="设备系列号"></el-input>
+            </el-col>
+        </el-row>
+        <br>
+        <el-row :gutter="20">
+            <el-col :span="8">
+                <el-input v-model="lackedComponent" placeholder="缺少零件"></el-input>
+            </el-col>
+        </el-row>
+        <br>
+        <el-row :gutter="20">
+            <el-col :span="4">
+                <el-select v-model="faultType" clearable="true" placeholder="故障类型">
+                    <el-option
+                            v-for="option in faultTypeOptions"
+                            :key="option.value"
+                            :label="option.label"
+                            :value="option.value">
+                    </el-option>
+                </el-select>
+            </el-col>
+        </el-row>
+        <br>
+        <el-row :gutter="20">
+            <el-col :span="8">
+                <el-input v-model="faultDescription" placeholder="故障描述"></el-input>
+            </el-col>
+        </el-row>
+    </div>
+</template>
+<script>
+    var deviceInfo = {
+        template: '#deviceInfo',
+        data: function (){
+            return {
+                deviceType: '',
+                deviceTypeOptions: [{
+                    label: '台式机',
+                    value: '台式机'
+                },{
+                    label: '笔记本',
+                    value: '笔记本'
+                },{
+                    label: '投影仪',
+                    value: '投影仪'
+                },{
+                    label: '打印机',
+                    value: '打印机'
+                },{
+                    label: '其他',
+                    value: '其他'
+                }],
+                deviceBrand: '',
+                deviceModel: '',
+                deviceSeries: '',
+                lackedComponent: '',
+                faultDescription: '',
+                faultType: '',
+                faultTypeOptions: [{
+                    label: '固定性故障',
+                    value: '固定性故障'
+                },{
+                    label: '间歇性故障',
+                    value: '间歇性故障'
+                }]
+            }
+        },
+        methods: {
+
+        }
+    }
+</script>
+<!-- 报修信息组件 -->
+<template id="reportInfo">
+    <div>
+        <el-row :gutter="20">
+            <el-col :span="4">
+                <el-input v-model="reportTime" placeholder="报修时间"></el-input>
+            </el-col>
+            <el-col :span="4">
+                <el-input v-model="estimateCost" placeholder="预估费用"></el-input>
+            </el-col>
+        </el-row>
+        <br>
+        <el-row :gutter="20">
+            <el-col :span="4">
+                <el-select v-model="reportStatus" clearable="true" placeholder="报修状态">
+                    <el-option
+                            v-for="option in reportStatusOptions"
+                            :key="option.value"
+                            :label="option.label"
+                            :value="option.value">
+                    </el-option>
+                </el-select>
+            </el-col>
+            <el-col :span="4">
+                <el-input v-model="estimateCompleteTime" placeholder="预估完成时间"></el-input>
+            </el-col>
+        </el-row>
+    </div>
+</template>
+<script>
+    var reportInfo = {
+        template: '#reportInfo',
+        data: function (){
+            return {
+                reportTime: '',
+                estimateCost: '',
+                estimateCompleteTime: '',
+                reportStatus: '',
+                reportStatusOptions: [{
+                    label: '进行中',
+                    value: '进行中'
+                },{
+                    label: '结束',
+                    value: '结束'
+                },{
+                    label: '撤销',
+                    value: '撤销'
+                }]
+            }
+        }
+    }
+</script>
+<!-- 新建报修记录功能模块
+     组件：1.用户信息组件
+          2.设备信息组件
+          3.报修信息组件
+-->
+<template id="newMaintenanceReport">
+    <div>
+        <el-row>
+            <el-col :span="22">
+                <h2>新的报修记录</h2>
+            </el-col>
+            <el-col :span="2">
+                <el-button type="success"> 提 交 </el-button>
+            </el-col>
+        </el-row>
+        <hr>
+        <h3>用户信息</h3>
+        <customer-info></customer-info>
+        <h3>设备信息</h3>
+        <device-info></device-info>
+        <h3>报修信息</h3>
+        <report-info></report-info>
+    </div>
+</template>
+<script>
+    var newMaintenanceReport = {
+        template: '#newMaintenanceReport',
+        components: {
+            'customer-info': customerInfo,
+            'device-info': deviceInfo,
+            'report-info': reportInfo
+        },
+        data: function (){
+            return{
+
+            }
+        },
+        methods: {
+
+        }
+    }
+</script>
+<!-- 新建客户信息功能模块
+     组件：1.用户信息组件
+-->
+<template id="newCustomerInfo">
+    <div>
+        <el-row>
+            <el-col :span="22">
+                <h2>新的客户信息</h2>
+            </el-col>
+            <el-col :span="2">
+                <el-button type="success"> 提 交 </el-button>
+            </el-col>
+        </el-row>
+        <hr>
+        <customer-info></customer-info>
+    </div>
+</template>
+<script>
+    var newCustomerInfo = {
+        template: '#newCustomerInfo',
+        components: {
+            'customer-info': customerInfo
+        },
+        data: function (){
+            return {
+
+            }
+        },
+        methods: {
+
+        }
+    }
+</script>
+<!-- 维护用户信息功能模块
+     组件：1.用户筛选器组件
+          2.用户信息组件
+ -->
+<template id="manipulateCustomerInfo">
+    <div>
+
+        <hr>
+        <customer-info></customer-info>
+    </div>
+</template>
+<!-- vue实例 -->
+<script>
+    var app = new Vue({
+        el: '#app',
+        components: {
+            'new-maintenance-report': newMaintenanceReport,
+            'new-customer-info': newCustomerInfo
+        },
+        data: {
+            visible: {
+                newMaintenanceReport: false,
+                newCustomerInfo: true
+            }
+        }
+    })
+</script>
+</body>
+</html>

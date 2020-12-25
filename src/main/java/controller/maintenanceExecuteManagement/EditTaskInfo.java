@@ -1,5 +1,6 @@
 package controller.maintenanceExecuteManagement;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import pojo.ServiceRecord;
@@ -14,4 +15,5 @@ public class EditTaskInfo {
     public void EditTaskInfo(ServiceRecord serviceRecord){
         serviceRecordService.updateTask(serviceRecord);
     }
+
 }

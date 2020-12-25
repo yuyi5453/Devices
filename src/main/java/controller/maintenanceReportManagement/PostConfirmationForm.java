@@ -1,2 +1,8 @@
-package controller.maintenanceReportManagement;public class PostConfirmationForm {
+package controller.maintenanceReportManagement;
+
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class PostConfirmationForm {
+    
 }

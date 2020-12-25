@@ -1,5 +1,6 @@
 package controller.maintenanceExecuteManagement;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,4 +25,5 @@ public class GetUndispatchedTask {
         List<ServiceRecord> list=serviceRecordService.selectUndispatchedTask(ServiceRecord.UNASSIGNED);
         return new RestResult().setCode(ResultCode.SUCCESS).setData(list).toString();
     }
+
 }
