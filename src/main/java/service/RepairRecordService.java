@@ -3,6 +3,8 @@ package service;
 import pojo.RepairRecord;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
