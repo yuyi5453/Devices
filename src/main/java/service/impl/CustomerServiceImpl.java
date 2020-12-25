@@ -27,6 +27,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> i
         }
         else{
             this.save(customer);
+            log.debug(customer.getId().toString());
         }
         return new RestResult().setMessage("更新成功").setCode(ResultCode.SUCCESS).toString();
     }
