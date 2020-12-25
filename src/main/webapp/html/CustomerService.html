@@ -702,8 +702,8 @@
                             :info="info">
                     </customer-info>
                     <br>
-                    <el-button type="success">保存</el-button>
-                    <el-button type="danger">删除</el-button>
+                    <el-button type="success" @click="handleSave">保存</el-button>
+                    <el-button type="danger" @click="handleDelete">删除</el-button>
                 </div>
             </el-col>
         </el-row>
@@ -718,7 +718,7 @@
         },
         data: function (){
             return {
-                info: {},
+                info: {},//用户信息组件的数据源
                 visible: {
                     filterContainer: { value: false}
                 },
@@ -734,8 +734,16 @@
             handlePostRow: function (info){
                 this.info = info;
                 this.visible.filterContainer.value = true;
-                console.log("handlePostRow");
+                //console.log("handlePostRow");
+                //console.log(this.info);
+            },
+            handleSave: function (){
                 console.log(this.info);
+                this.visible.filterContainer.value = false;
+            },
+            handleDelete: function (){
+                console.log(this.info);
+                this.visible.filterContainer.value = false;
             }
         }
     }
