@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <title>Title</title>
 
-    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.zhimg.com/element-ui@2.14.1/lib/theme-chalk/index.css">
 </head>
 <body>
 <div id="app">
@@ -14,7 +15,7 @@
             <el-aside>
                 <el-container>
                     <el-main>
-
+                        <nav-bar @select-change="handleSelectChange"></nav-bar>
                     </el-main>
                     <el-footer>
 
@@ -22,23 +23,27 @@
                 </el-container>
             </el-aside>
             <el-main>
-                <new-maintenance-report v-show="visible.newMaintenanceReport"></new-maintenance-report>
-                <new-customer-info v-show="visible.newCustomerInfo"></new-customer-info>
+                <new-maintenance-report v-show="visible.newMaintenanceReport.value"></new-maintenance-report>
+                <new-customer-info v-show="visible.newCustomerInfo.value"></new-customer-info>
+                <manipulate-customer-info v-show="visible.manipulateCustomerInfo.value"></manipulate-customer-info>
             </el-main>
         </el-container>
     </el-container>
 </div>
+<!-- Vue -->
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<!-- 引入Element组件库 -->
+<script src="https://unpkg.zhimg.com/element-ui/lib/index.js"></script>
+<!-- 引入axios -->
+<script src="https://unpkg.zhimg.com/axios/dist/axios.min.js"></script>
 <!-- 用户信息组件 -->
 <template id="customerInfo">
     <div>
         <el-row :gutter="20">
-            <el-col :span="8">
+            <el-col :span="16">
                 <el-input v-model="idCard" placeholder="身份证号"></el-input>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="8">
                 <el-select v-model="customerType" clearable="true" placeholder="用户性质">
                     <el-option
                             v-for="option in customerTypeOptions"
@@ -51,19 +56,19 @@
         </el-row>
         <br>
         <el-row :gutter="20">
-            <el-col span="4">
+            <el-col :span="8">
                 <el-input v-model="companyName" placeholder="单位名称"></el-input>
             </el-col>
-            <el-col span="4">
+            <el-col :span="8">
                 <el-input v-model="phoneNumber" placeholder="联系方式"></el-input>
             </el-col>
-            <el-col span="4">
+            <el-col :span="8">
                 <el-input v-model="customerName" placeholder="联系人"></el-input>
             </el-col>
         </el-row>
         <br>
         <el-row :gutter="20">
-            <el-col :span="12">
+            <el-col :span="24">
                 <el-input v-model="address" placeholder="客户地址"></el-input>
             </el-col>
         </el-row>
@@ -95,36 +100,119 @@
                 address:''
             }
         },
+        props: [
+            'row'
+        ],
         methods: {
 
+        },
+        watch: {
+            row (){
+                this.idCard = this.row.idCard;
+                this.customerType = this.row.customerType;
+                this.companyName = this.row.companyName;
+                this.phoneNumber = this.row.phoneNumber;
+                this.customerName = this.row.customerName;
+                this.address = this.row.address;
+            }
         }
     }
 </script>
+<!-- 用户信息显示组件 -->
+<template id="customerInfoReadOnly">
+    <div>
+        <el-row :gutter="20">
+            <el-col span="6">
+                <p>客户编号{{customerId}}</p>
+            </el-col>
+        </el-row>
+    </div>
+</template>
 <!-- 用户筛选器组件 -->
 <template id="customerFilter">
     <div>
         <el-row :gutter="20">
-            <el-col :span="4"></el-col>
-            <el-col :span="4"></el-col>
-            <el-col :span="4"></el-col>
+            <el-col :span="8">
+                <el-input v-model="customerName" placeholder="联系人"></el-input>
+            </el-col>
+            <el-col :span="8">
+                <el-input v-model="phoneNumber" placeholder="移动电话"></el-input>
+            </el-col>
+            <el-col :span="8">
+                <el-button type="primary" icon="el-icon-search">搜索</el-button>
+            </el-col>
         </el-row>
         <el-row :gutter="20">
-            <el-col :span="20">
-                <el-table>
-
+            <el-col :span="24">
+                <el-table
+                    stripe
+                    :data="customerData"
+                    highlight-current-row
+                    @current-change="handleCurrentChange">
+                    <el-table-column
+                        type="index"
+                        width="50">
+                    </el-table-column>
+                    <el-table-column
+                        label="客户编号"
+                        prop="customerId"
+                        width="100">
+                    </el-table-column>
+                    <el-table-column
+                        label="联系人"
+                        prop="customerName"
+                        width="100">
+                    </el-table-column>
+                    <el-table-column
+                        label="移动电话"
+                        prop="phoneNumber"
+                        width="100">
+                    </el-table-column>
+                    <el-table-column
+                        label="客户性质"
+                        prop="customerType">
+                    </el-table-column>
                 </el-table>
             </el-col>
         </el-row>
     </div>
 </template>
 <script>
-
+    var customerFilter = {
+        template: '#customerFilter',
+        data: function (){
+            return {
+                customerName: '',
+                phoneNumber: '',
+                customerData: [{
+                    customerId: '1',
+                    customerName: 'jack',
+                    phoneNumber: '12312312123',
+                    customerType: '家庭用户'
+                },{
+                    customerId: '2',
+                    customerName: 'rob',
+                    phoneNumber: '45645645456',
+                    customerType: '单位用户'
+                }],
+                currentRow:{}
+            }
+        },
+        methods: {
+            handleCurrentChange: function (currentRow, oldCurrentRow){
+                this.currentRow = currentRow;
+                this.$emit('post-row',this.currentRow);
+                console.log("handelCurrentChange:")
+                console.log(this.currentRow);
+            }
+        }
+    }
 </script>
 <!-- 设备信息组件 -->
 <template id="deviceInfo">
     <div>
         <el-row :gutter="20">
-            <el-col :span="4">
+            <el-col :span="6">
                 <el-select v-model="deviceType" clearable="true" placeholder="请选择设备类型">
                     <el-option
                             v-for="option in deviceTypeOptions"
@@ -134,25 +222,25 @@
                     </el-option>
                 </el-select>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="6">
                 <el-input v-model="deviceBrand" placeholder="设备品牌"></el-input>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="6">
                 <el-input v-model="deviceModel" placeholder="设备型号"></el-input>
             </el-col>
-            <el-col span="4">
+            <el-col span="6">
                 <el-input v-model="deviceSeries" placeholder="设备系列号"></el-input>
             </el-col>
         </el-row>
         <br>
         <el-row :gutter="20">
-            <el-col :span="8">
+            <el-col :span="24">
                 <el-input v-model="lackedComponent" placeholder="缺少零件"></el-input>
             </el-col>
         </el-row>
         <br>
         <el-row :gutter="20">
-            <el-col :span="4">
+            <el-col :span="6">
                 <el-select v-model="faultType" clearable="true" placeholder="故障类型">
                     <el-option
                             v-for="option in faultTypeOptions"
@@ -165,8 +253,29 @@
         </el-row>
         <br>
         <el-row :gutter="20">
-            <el-col :span="8">
+            <el-col :span="24">
                 <el-input v-model="faultDescription" placeholder="故障描述"></el-input>
+            </el-col>
+        </el-row>
+        <br>
+        <el-row :gutter="20">
+            <el-col :span="8">
+                <el-input v-model="hdd" placeholder="HDD"></el-input>
+            </el-col>
+            <el-col :span="8">
+                <el-input v-model="ram" placeholder="内存"></el-input>
+            </el-col>
+            <el-col :span="8">
+                <el-input v-model="ACadapter" placeholder="AC适配器"></el-input>
+            </el-col>
+        </el-row>
+        <br>
+        <el-row :gutter="20">
+            <el-col :span="8">
+                <el-input v-model="battery" placeholder="电池"></el-input>
+            </el-col>
+            <el-col :span="8">
+                <el-input v-model="CDROM" placeholder="外接光驱"></el-input>
             </el-col>
         </el-row>
     </div>
@@ -205,7 +314,12 @@
                 },{
                     label: '间歇性故障',
                     value: '间歇性故障'
-                }]
+                }],
+                hdd: '',
+                ram: '',
+                ACadapter: '',
+                battery: '',
+                CDROM: ''
             }
         },
         methods: {
@@ -217,16 +331,16 @@
 <template id="reportInfo">
     <div>
         <el-row :gutter="20">
-            <el-col :span="4">
+            <el-col :span="8">
                 <el-input v-model="reportTime" placeholder="报修时间"></el-input>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="8">
                 <el-input v-model="estimateCost" placeholder="预估费用"></el-input>
             </el-col>
         </el-row>
         <br>
         <el-row :gutter="20">
-            <el-col :span="4">
+            <el-col :span="8">
                 <el-select v-model="reportStatus" clearable="true" placeholder="报修状态">
                     <el-option
                             v-for="option in reportStatusOptions"
@@ -236,7 +350,7 @@
                     </el-option>
                 </el-select>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="8">
                 <el-input v-model="estimateCompleteTime" placeholder="预估完成时间"></el-input>
             </el-col>
         </el-row>
@@ -273,20 +387,24 @@
 <template id="newMaintenanceReport">
     <div>
         <el-row>
-            <el-col :span="22">
-                <h2>新的报修记录</h2>
-            </el-col>
-            <el-col :span="2">
-                <el-button type="success"> 提 交 </el-button>
+            <el-col :span="12">
+                <el-row>
+                    <el-col :span="22">
+                        <h2>新的报修记录</h2>
+                    </el-col>
+                    <el-col :span="2">
+                        <el-button type="success"> 提 交 </el-button>
+                    </el-col>
+                </el-row>
+                <hr>
+                <h3>用户信息</h3>
+                <customer-info></customer-info>
+                <h3>设备信息</h3>
+                <device-info></device-info>
+                <h3>报修信息</h3>
+                <report-info></report-info>
             </el-col>
         </el-row>
-        <hr>
-        <h3>用户信息</h3>
-        <customer-info></customer-info>
-        <h3>设备信息</h3>
-        <device-info></device-info>
-        <h3>报修信息</h3>
-        <report-info></report-info>
     </div>
 </template>
 <script>
@@ -313,15 +431,19 @@
 <template id="newCustomerInfo">
     <div>
         <el-row>
-            <el-col :span="22">
-                <h2>新的客户信息</h2>
-            </el-col>
-            <el-col :span="2">
-                <el-button type="success"> 提 交 </el-button>
+            <el-col :span="12">
+                <el-row>
+                    <el-col :span="22">
+                        <h2>新的客户信息</h2>
+                    </el-col>
+                    <el-col :span="2">
+                        <el-button type="success"> 提 交 </el-button>
+                    </el-col>
+                </el-row>
+                <hr>
+                <customer-info></customer-info>
             </el-col>
         </el-row>
-        <hr>
-        <customer-info></customer-info>
     </div>
 </template>
 <script>
@@ -346,24 +468,142 @@
  -->
 <template id="manipulateCustomerInfo">
     <div>
-
-        <hr>
-        <customer-info></customer-info>
+        <el-row :gutter="20">
+            <el-col :span="12">
+                <h3>搜索用户信息</h3>
+                <hr>
+                <customer-filter
+                        @post-row="handlePostRow">
+                </customer-filter>
+            </el-col>
+            <el-col :span="12">
+                <h3>维护用户信息</h3>
+                <hr>
+                <customer-info
+                        :row="row">
+                </customer-info>
+                <br>
+                <el-button type="success">保存</el-button>
+                <el-button type="danger">删除</el-button>
+            </el-col>
+        </el-row>
     </div>
 </template>
+<script>
+    var manipulateCustomerInfo = {
+        template: '#manipulateCustomerInfo',
+        components: {
+            'customer-filter': customerFilter,
+            'customer-info': customerInfo
+        },
+        data: function (){
+            return {
+                row: {}
+            }
+        },
+        methods: {
+            handlePostRow: function (row){
+                this.row = row;
+                console.log("handlePostRow");
+                console.log(this.row);
+            }
+        }
+    }
+</script>
+<!-- 导航栏模块 -->
+<template id="navBar">
+    <div>
+        <el-menu
+            @select="handleSelect">
+            <el-submenu index="1">
+                <template slot="title">
+                    <i class="el-icon-location"></i>
+                    <span>客户管理</span>
+                </template>
+                <el-menu-item index="1-1">
+                    <span>添加新客户</span>
+                </el-menu-item>
+                <el-menu-item index="1-2">
+                    <span>维护客户信息</span>
+                </el-menu-item>
+            </el-submenu>
+            <el-submenu index="2">
+                <template slot="title">
+                    <i class="el-icon-location"></i>
+                    <span>报修管理</span>
+                </template>
+                <el-menu-item index="2-1">
+                    <span>添加新报修信息</span>
+                </el-menu-item>
+                <el-menu-item index="2-2">
+                    <span>维护报修信息</span>
+                </el-menu-item>
+            </el-submenu>
+            <el-menu-item index="3">
+                <i class="el-icon-location"></i>
+                <span>登记结算信息</span>
+            </el-menu-item>
+        </el-menu>
+    </div>
+</template>
+<script>
+    var navBar = {
+        template: '#navBar',
+        data: function (){
+            return {
+                selected: ''
+            }
+        },
+        methods: {
+            handleSelect: function (index){
+                this.selected = index;
+                this.$emit('select-change',this.selected);
+                console.log(this.selected);
+            }
+        }
+
+    }
+</script>
 <!-- vue实例 -->
 <script>
     var app = new Vue({
         el: '#app',
         components: {
+            'nav-bar': navBar,
             'new-maintenance-report': newMaintenanceReport,
-            'new-customer-info': newCustomerInfo
+            'new-customer-info': newCustomerInfo,
+            'manipulate-customer-info': manipulateCustomerInfo
         },
         data: {
             visible: {
-                newMaintenanceReport: false,
-                newCustomerInfo: true
+                newMaintenanceReport: {value: false},
+                newCustomerInfo: {value: true},
+                manipulateCustomerInfo: {value: false}
+            },
+            activeComponent: {}
+        },
+        methods: {
+            handleSelectChange: function (selected){
+                console.log(selected);
+                if(selected == '1-1') {
+                    this.activeComponent.value = false;
+                    this.activeComponent = this.visible.newCustomerInfo;
+                    this.activeComponent.value = true;
+                }
+                if(selected == '1-2') {
+                    this.activeComponent.value = false;
+                    this.activeComponent = this.visible.manipulateCustomerInfo;
+                    this.activeComponent.value = true;
+                }
+                if(selected == '2-1') {
+                    this.activeComponent.value = false;
+                    this.activeComponent = this.visible.newMaintenanceReport;
+                    this.activeComponent.value = true;
+                }
             }
+        },
+        mounted(){
+            this.activeComponent = this.visible.newCustomerInfo;
         }
     })
 </script>
