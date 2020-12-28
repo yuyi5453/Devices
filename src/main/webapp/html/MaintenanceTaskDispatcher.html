@@ -1,29 +1,508 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="height: 100%;">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.zhimg.com/element-ui@2.14.1/lib/theme-chalk/index.css">
 </head>
-<body>
-<div id="app">
-    <el-container>
-        <el-header></el-header>
-        <el-container>
-            <el-aside>
-                <el-container>
-                    <el-main>
-
-                    </el-main>
-                    <el-footer>
-
-                    </el-footer>
-                </el-container>
-            </el-aside>
-            <el-main>
-
-            </el-main>
-        </el-container>
+<body style="height: 100%; margin: 0">
+<div id="app" style="height: 100%">
+    <el-container :style="{height: '100%', overflow: 'hidden'}">
+        <el-aside :style="{background: '#545c64'}">
+            <el-container>
+                <el-main>
+                        <nav-bar></nav-bar>
+                </el-main>
+                <el-footer>
+    
+                </el-footer>
+            </el-container>
+        </el-aside>
+        <el-main :style="{height: '100%', overflow: 'auto'}">
+            <div style="padding: 20px;">
+                <component :is="activeComponentName"></component>
+            </div>
+        </el-main>
     </el-container>
 </div>
+<!-- Vue -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<!-- 引入Element组件库 -->
+<script src="https://unpkg.zhimg.com/element-ui/lib/index.js"></script>
+<!-- 引入axios -->
+<script src="https://unpkg.zhimg.com/axios/dist/axios.min.js"></script>
+<!-- 客户信息显示组件
+     接收数据：prop:{info}
+     发送数据：post-customer-info
+-->
+<template id="customerInfoReadOnly">
+    <div>
+        <el-row :gutter="20">
+            <el-col :span="8">
+                <p>身份证号：{{idcard}}</p>
+            </el-col>
+            <el-col :span="8">
+                <p>客户类型：{{customerType}}</p>
+            </el-col>
+            <el-col :span="8">
+                <p>单位名称：{{companyName}}</p>
+            </el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="8">
+                <p>联系人：{{customerName}}</p>
+            </el-col>
+            <el-col :span="8">
+                <p>联系电话：{{phone}}</p>
+            </el-col>
+            <el-col :span="8">
+                <p>e-mail：{{email}}</p>
+            </el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="16">
+                <p>地址：{{address}}</p>
+            </el-col>
+        </el-row>
+    </div>
+</template>
+<script>
+    var customerInfoReadOnly = {
+        template: '#customerInfoReadOnly',
+        data: function () {
+            return {
+                idcard: '',
+                customerType: '',
+                companyName: '',
+                customerName: '',
+                phone: '',
+                email: '',
+                address: ''
+            }
+        },
+        methods: {
+            postInfo: function (){
+                var info = {};
+                this.$emit('post-customer-info',info);
+            }
+        },
+        props: [
+            'info'
+        ],
+        watch: {
+            info() {
+                this.idcard = this.info.idcard;
+                this.customerType = this.info.customerType;
+                this.companyName = this.info.companyName;
+                this.customerName = this.info.customerName;
+                this.phone = this.info.phone;
+                this.email = this.info.email;
+                this.address = this.info.address;
+            }
+        }
+    }
+</script>
+<!-- 设备信息显示组件 -->
+<template id="deviceInfoReadOnly">
+    <div>
+        <el-row>
+            <el-col :span="6">
+                <span>品牌：{{brand}}</span>
+            </el-col>
+            <el-col :span="6">
+                <span>产品类型：{{type}}</span>
+            </el-col>
+            <el-col :span="6">
+                <span>型号：{{model}}</span>
+            </el-col>
+            <el-col :span="6">
+                <span>系列号：{{seriesNum}}</span>
+            </el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="6">
+                <span>HDD：{{hdd}}</span>
+            </el-col>
+            <el-col :span="6">
+                <span>内存：{{memory}}</span>
+            </el-col>
+            <el-col :span="6">
+                <span>AC适配器：{{acAdapter}}</span>
+            </el-col>
+            <el-col :span="6">
+                <span>电池：{{battery}}</span>
+            </el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="6">光驱：{{opticalDrive}}</el-col>
+        </el-row>
+    </div>
+</template>
+<script>
+    var deviceInfoReadOnly = {
+        template: '#deviceInfoReadOnly',
+        data: function (){
+            return {
+                brand: '',
+                type: '',
+                seriesNum: '',
+                hdd: '',
+                memory: '',
+                acAdapter: '',
+                battery: '',
+                opticalDrive: ''
+            }
+        },
+        methods: {
+
+        },
+        prop: [
+            'info'
+        ],
+        watch: {
+            info() {
+                this.brand = this.info.brand;
+                this.type = this.info.type;
+                this.seriesNum = this.info.seriesNum;
+                this.hdd = this.info.hdd;
+                this.memory = this.info.memory;
+                this.acAdapter = this.info.acAdapter;
+                this.battery = this.info.battery;
+                this.opticalDrive = this.info.opticalDrive;
+            }
+        }
+    }
+</script>
+<!-- 报修信息显示组件 -->
+
+<!-- 维修任务信息显示组件 -->
+<template id="taskInfoReadOnly">
+    <div>
+        <el-row>
+            <el-col :span="6">
+                <span>分配时间：{{distributeTime}}</span>
+            </el-col>
+            <el-col :span="6">
+                <span>维修时间：{{repairTime}}</span>
+            </el-col>
+            <el-col :span="6">
+                <span>人工费：{{laborCost}}</span>
+            </el-col>
+            <el-col :span="6">材料费：{{materialCost}}</el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="24">
+                <span>检测记录：{{detectRecordDescription}}</span>
+            </el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="24">
+                <span>维修记录：{{repairRecordDescription}}</span>
+            </el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="6">
+                <span>维修状态：{{status}}</span>
+            </el-col>
+            <el-col :span="6">
+                <span>维修延迟程度：{{delayDegree}}</span>
+            </el-col>
+        </el-row>
+    </div>
+</template>
+<script>
+    var taskInfoReadOnly = {
+        template: '#taskInfoReadOnly',
+        data: function (){
+            return {
+                distributeTime: '',
+                repairTime: '',
+                laborCost: '',
+                materialCost: '',
+                detectRecordDescription: '',
+                repairRecordDescription: '',
+                status: '',
+                delayDegree: ''
+            }
+        },
+        methods: {
+
+        },
+        prop: [
+            'info'
+        ],
+        watch: {
+            info() {
+                this.distributeTime = this.info.distributeTime;
+                this.repairTime = this.info.repairTime;
+                this.laborCost = this.info.laborCost;
+                this.materialCost = this.info.materialCost;
+                this.detectRecordDescription = this.info.detectRecordDescription;
+                this.repairRecordDescription = this.info.repairRecordDescription;
+                this.status = this.info.status;
+                this.delayDegree = this.info.delayDegree;
+            }
+        }
+    }
+</script>
+<!-- 技术人员信息显示组件 -->
+
+<!-- 技术人员过滤器组件 -->
+<template id="userFilter">
+    <div>
+        <el-row :gutter="20">
+            <el-col :span="4">
+
+            </el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="24">
+                <el-table
+                        stripe
+                        :data="userData"
+                        highlight-current-row
+                        @row-click="handleCurrentChange"
+                        width="100%">
+                    <el-table-column
+                            label="姓名"
+                            prop="userName"
+                    ></el-table-column>
+                    <el-table-column
+                            label="岗位"
+                            prop="userType"
+                    ></el-table-column>
+                </el-table>
+            </el-col>
+        </el-row>
+    </div>
+</template>
+<script>
+    var userFilter = {
+        template: '#userFilter',
+        data: function () {
+            return {
+                userData: []
+            }
+        },
+
+    }
+</script>
+<!-- 维修任务过滤器组件 -->
+<template id="maintenanceTaskFilter">
+    <div>
+        <el-row :gutter="20">
+            <el-col :span="3">
+                <el-input v-model="phone" placeholder="移动电话"></el-input>
+            </el-col>
+            <el-col :span="3">
+                <el-input v-model="repairTime" placeholder="报修时间"></el-input>
+            </el-col>
+            <el-col :span="3">
+                <el-input v-model="deviceBrand" placeholder="品牌"></el-input>
+            </el-col>
+            <el-col :span="3">
+                <el-select v-model="deviceType" placeholder="产品类型">
+                    <el-option
+                            v-for="option in deviceTypeOptions"
+                            :key="option.value"
+                            :value="option.value"
+                            :label="option.label"
+                    ></el-option>
+                </el-select>
+            </el-col>
+            <el-col :span="3">
+                <el-select v-model="maintenanceStatus" placeholder="维修状态">
+                    <el-option
+                            v-for="option in statusOptions"
+                            :key="option.value"
+                            :value="option.value"
+                            :label="option.label"
+                    ></el-option>
+                </el-select>
+            </el-col>
+            <el-col :span="3">
+                <el-input v-model="engineer" placeholder="技术人员"></el-input>
+            </el-col>
+            <el-col :span="3">
+                <el-button type="primary">搜索</el-button>
+            </el-col>
+        </el-row>
+        <br>
+        <el-row>
+            <el-col :span="24">
+                <el-table
+                        stripe
+                        :data="maintenanceTaskData"
+                        highlight-current-row
+                        @row-click="handleCurrentChange"
+                        width="100%">
+                    <el-table-column
+                            label="联系人"
+                            prop="customerName"
+                    ></el-table-column>
+                    <el-table-column
+                            label="移动电话"
+                            prop="phone"
+                    ></el-table-column>
+                    <el-table-column
+                            label="报修时间"
+                            prop="repairTime"
+                    ></el-table-column>
+                    <el-table-column
+                            label="产品类型"
+                            prop="deviceType"
+                    ></el-table-column>
+                    <el-table-column
+                            label="品牌"
+                            prop="deviceBrand"
+                    ></el-table-column>
+                    <el-table-column
+                            label="型号"
+                            prop="deviceModel"
+                    ></el-table-column>
+                    <el-table-column
+                            label="系列号"
+                            prop="seriesNum"
+                    ></el-table-column>
+                    <el-table-column
+                            label="维修状态"
+                            prop="status"
+                    ></el-table-column>
+                    <el-table-column
+                            label="技术人员"
+                            prop="engineer"
+                    ></el-table-column>
+                </el-table>
+            </el-col>
+        </el-row>
+    </div>
+</template>
+<script>
+    var maintenanceTaskFilter = {
+        template: '#maintenanceTaskFilter',
+        data: function (){
+            return {
+                phone: '',
+                repairTime: '',
+                deviceBrand: '',
+                deviceType: '',
+                deviceTypeOptions: [{
+                    label: '台式机',
+                    value: '台式机'
+                },{
+                    label: '笔记本',
+                    value: '笔记本'
+                },{
+                    label: '投影仪',
+                    value: '投影仪'
+                },{
+                    label: '打印机',
+                    value: '打印机'
+                },{
+                    label: '其他',
+                    value: '其他'
+                }],
+                maintenanceStatus: '',
+                statusOptions: [{
+                    label: '未分配',
+                    value: '未分配'
+                },{
+                    label: '已分配',
+                    value: '已分配'
+                },{
+                    label: '已维修',
+                    value: '已维修'
+                },{
+                    label: '已撤销',
+                    value: '已撤销'
+                }],
+                engineer: '',
+                maintenanceTaskData: []
+            }
+        }
+    }
+</script>
+<!-- 任务调度功能模块 -->
+<template id="taskDispatcher">
+    <div>
+        <el-row>
+            <el-col :span="20">
+                <div :style="style.container">
+                    <h3>任务检索</h3>
+                    <maintenance-task-filter></maintenance-task-filter>
+                </div>
+                <br>
+                <div :style="style.container">
+                    <h3>详情</h3>
+                    <h4>客户信息</h4>
+                    <customer-info-readonly></customer-info-readonly>
+                    <h4>设备信息</h4>
+                    <device-info-readonly></device-info-readonly>
+                    <h4>维修信息</h4>
+                    <task-info-readonly></task-info-readonly>
+                </div>
+            </el-col>
+        </el-row>
+    </div>
+</template>
+<script>
+    var taskDispatcher = {
+        template: '#taskDispatcher',
+        components: {
+            'maintenance-task-filter': maintenanceTaskFilter,
+            'user-filter': userFilter,
+            'customer-info-readonly': customerInfoReadOnly,
+            'device-info-readonly': deviceInfoReadOnly,
+            'task-info-readonly': taskInfoReadOnly,
+            //'report-info-readonly': reportInfoReadOnly
+        },
+        data: function (){
+            return {
+                style: {
+                    container: {
+                        padding: '20px',
+                        boxShadow: '0 2px 12px 0 rgba(0, 0, 0, 0.1)'
+                    }
+                }
+            }
+        }
+    }
+</script>
+<!-- 导航栏组件 -->
+<template id="navBar">
+    <div>
+        <el-menu
+                background-color="#545c64"
+                text-color="#fff"
+                active-text-color="#ffd04b"
+                :style="{border: '0'}">
+            <el-menu-item index="1">
+                <span>任务调度</span>
+            </el-menu-item>
+        </el-menu>
+    </div>
+</template>
+<script>
+    var navBar = {
+        template: '#navBar',
+    }
+</script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        components: {
+            'nav-bar': navBar,
+            'task-dispatcher': taskDispatcher
+        },
+        data: {
+            activeComponentName: '',
+        },
+        mounted() {
+            this.activeComponentName = 'task-dispatcher';
+        }
+    })
+</script>
 </body>
 </html>
