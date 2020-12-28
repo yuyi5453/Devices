@@ -218,13 +218,13 @@
     <div>
         <el-row :gutter="20">
             <el-col :span="8">
-                <el-input v-model="customerName" placeholder="联系人"></el-input>
+                <el-input v-model="idcard" placeholder="身份证号"></el-input>
             </el-col>
             <el-col :span="8">
                 <el-input v-model="phoneNumber" placeholder="移动电话"></el-input>
             </el-col>
             <el-col :span="8">
-                <el-button type="primary" icon="el-icon-search">搜索</el-button>
+                <el-button @click="handleSearch" type="primary" icon="el-icon-search">搜索</el-button>
             </el-col>
         </el-row>
         <el-row :gutter="20">
@@ -288,25 +288,8 @@
             return {
                 customerName: '',
                 phoneNumber: '',
-                customerData: [{
-                    customerId: '1',
-                    idcard: '330424199901010011',
-                    customerType: '家庭用户',
-                    companyName: '大连海事大学',
-                    phone: '12312312123',
-                    customerName: 'jack',
-                    email: '123456@163.com',
-                    address: '大连市凌海路1号'
-                },{
-                    customerId: '2',
-                    idcard: '330424199909090099',
-                    customerType: '单位用户',
-                    companyName: '大连理工大学',
-                    phone: '45645645456',
-                    customerName: 'rob',
-                    email: '654321@163.com',
-                    address: '大连市凌工路1号'
-                }],
+                idcard: '',
+                customerData: [],
                 currentRow:{}
             }
         },
@@ -316,7 +299,26 @@
                 this.$emit('post-row',this.currentRow);
                 //console.log("handelCurrentChange:")
                 //console.log(this.currentRow);
+            },
+            handleSearch: function () {
+                var param = new URLSearchParams();
+                param.append('idcard',this.idcard);
+                var that = this;
+                axios.post("/Devices/getCustomerInfo",param).then(function (response) {
+                    var data = JSON.parse(response.data).data;
+                    that.customerData.splice(0);
+                    that.customerData.push(data);
+                    console.log(data);
+                });
             }
+        },
+        mounted() {
+            var that = this;
+            axios.post("/Devices/getAllCustomer").then(function (response) {
+                var data = JSON.parse(response.data).data;
+                that.customerData = data;
+                console.log(data);
+            });
         }
     }
 </script>
@@ -745,6 +747,7 @@
                 console.log(this.info);
                 this.visible.filterContainer.value = false;
                 axios.post("/Devices/updateCustomer",this.info).then(function (response) {
+                    // 获取不到更新后表单的值
                     console.log(response);
                 })
             },
