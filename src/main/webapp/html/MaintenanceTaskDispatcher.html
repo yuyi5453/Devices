@@ -3,27 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.zhimg.com/element-ui@2.14.1/lib/theme-chalk/index.css">
 </head>
 <body>
-<div id="app">
-    <el-container>
-        <el-header></el-header>
-        <el-container>
-            <el-aside>
+    <div id="app" style="height: 100%">
+        <el-container :style="{height: '100%', overflow: 'hidden'}">
+            <el-aside :style="{background: '#545c64'}">
                 <el-container>
                     <el-main>
-
+                        <nav-bar></nav-bar>
                     </el-main>
                     <el-footer>
-
+    
                     </el-footer>
                 </el-container>
             </el-aside>
-            <el-main>
-
+            <el-main :style="{height: '100%', overflow: 'auto'}">
+                <div style="padding: 20px;">
+                    <component :is="activeComponentName"></component>
+                </div>
             </el-main>
         </el-container>
-    </el-container>
-</div>
+    </div>
+<!-- Vue -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<!-- 引入Element组件库 -->
+<script src="https://unpkg.zhimg.com/element-ui/lib/index.js"></script>
+<!-- 引入axios -->
+<script src="https://unpkg.zhimg.com/axios/dist/axios.min.js"></script>
+<!-- 维修任务过滤器组件 -->
+<template id="maintenanceTaskFilter">
+    <div>
+        <el-row :gutter="20">
+
+        </el-row>
+        <el-row>
+            <el-col :span="24">
+                <el-table>
+                    <el-table-colunm></el-table-colunm>
+                </el-table>
+            </el-col>
+        </el-row>
+    </div>
+</template>
+<!-- 导航栏组件 -->
+<template id="navBar">
+    <div>
+        <el-menu
+                @select="handleSelect"
+                background-color="#545c64"
+                text-color="#fff"
+                active-text-color="#ffd04b"
+                :style="{border: '0'}">
+            <el-menu-item>
+                <span>任务调度</span>
+            </el-menu-item>
+        </el-menu>
+    </div>
+</template>
+<script>
+    var navBar = {
+        template: '#navBar',
+    }
+</script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        componets: {
+            'nav-bar':navBar,
+        },
+        data: {
+            activeComponentName: '',
+        }
+    })
+</script>
 </body>
 </html>
