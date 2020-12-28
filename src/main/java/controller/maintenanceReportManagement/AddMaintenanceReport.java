@@ -26,12 +26,14 @@ public class AddMaintenanceReport {
     @RequestMapping("/addMaintenanceReport")
     public String add(HttpServletRequest request){
         String customerId = request.getParameter("customerId");
+        System.out.println(customerId);
         RepairRecord repairRecord = new RepairRecord();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd ");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
             repairRecord.setExpectedTime(sdf.parse(request.getParameter("expectedTime")));
         } catch (ParseException e) {
             e.printStackTrace();
+            return "格式错误";
         }
         repairRecord.setRepairTime(new Date());
         repairRecord.setStatus(RepairRecord.INPROCESS);
@@ -40,11 +42,11 @@ public class AddMaintenanceReport {
 
         Device device = new Device();
         device.setRecordId(recordId);
-        device.setType(Integer.valueOf(request.getParameter("type")));
-        device.setBrand(request.getParameter("type"));
+        device.setType(request.getParameter("type"));
+        device.setBrand(request.getParameter("brand"));
         device.setModel(request.getParameter("model"));
-        device.setSeriesNum(Integer.valueOf(request.getParameter("seriesNum")));
-        device.setFaultType(Integer.valueOf(request.getParameter("faultType")));
+        device.setSeriesNum(request.getParameter("seriesNum"));
+        device.setFaultType(request.getParameter("faultType"));
         device.setHdd(request.getParameter("hdd"));
         device.setMemery(request.getParameter(",memery"));
         device.setAcAdapter(request.getParameter("acAdapter"));

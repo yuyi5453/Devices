@@ -179,6 +179,7 @@
         template: '#customerInfoReadOnly',
         data: function () {
             return {
+                id: '',
                 idcard: '',
                 customerType: '',
                 companyName: '',
@@ -312,14 +313,14 @@
                 });
             }
         },
-        mounted() {
-            var that = this;
-            axios.post("/Devices/getAllCustomer").then(function (response) {
-                var data = JSON.parse(response.data).data;
-                that.customerData = data;
-                console.log(data);
-            });
-        }
+        // mounted() {
+        //     var that = this;
+        //     axios.post("/Devices/getAllCustomer").then(function (response) {
+        //         var data = JSON.parse(response.data).data;
+        //         that.customerData = data;
+        //         console.log(data);
+        //     });
+        // }
     }
 </script>
 
@@ -629,6 +630,23 @@
                 console.log(this.customerInfoData);
                 console.log(this.deviceInfoData);
                 console.log(this.reportInfoData);
+                var parma = new URLSearchParams();
+                parma.append('customerId',this.customerInfoData.id);
+                parma.append('expectedTime',this.reportInfoData.estimateCompleteTime);
+                parma.append('type',this.deviceInfoData.deviceType);
+                parma.append('brand',this.deviceInfoData.deviceBrand);
+                parma.append('model',this.deviceInfoData.deviceModel);
+                parma.append('seriesNum',this.deviceInfoData.deviceSeries);
+                parma.append('faultType',this.deviceInfoData.faultType);
+                parma.append('hdd',this.deviceInfoData.hdd);
+                parma.append('memery',this.deviceInfoData.ram);
+                parma.append('acAdapter',this.deviceInfoData.ACadapter);
+                parma.append('battery',this.deviceInfoData.battery);
+                parma.append('opticalDrive',this.deviceInfoData.CDROM);
+
+                axios.post("/Devices/addMaintenanceReport",parma).then(function (response) {
+                    console.log(response.data);
+                });
             }
         }
     }
