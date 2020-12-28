@@ -83,6 +83,9 @@
 <script>
     var customerInfo = {
         template: '#customerInfo',
+        props: [
+            'info'
+        ],
         data: function (){
             return{
                 idcard: '',
@@ -104,12 +107,9 @@
                 phone: '',
                 customerName: '',
                 email: '',
-                address:''
+                address: ''
             }
         },
-        props: [
-            'info'
-        ],
         methods: {
             postInfo: function (){
                 var info = {
@@ -122,6 +122,7 @@
                     address: this.address
                 };
                 this.$emit('post-customer-info',info);
+                console.log(info);
 
             }
         },
@@ -134,6 +135,7 @@
                 this.customerName = this.info.customerName;
                 this.email = this.info.email;
                 this.address = this.info.address;
+                console.log('watch execute')
             }
         }
     }
@@ -723,7 +725,8 @@
                     <h3>维护用户信息</h3>
                     <hr>
                     <customer-info
-                            :info="info">
+                            :info="info"
+                            @post-customer-info="handleInfo">
                     </customer-info>
                     <br>
                     <el-button type="success" @click="handleSave">保存</el-button>
@@ -760,6 +763,9 @@
                 this.visible.filterContainer.value = true;
                 //console.log("handlePostRow");
                 //console.log(this.info);
+            },
+            handleInfo: function (info){
+                this.info = info;
             },
             handleSave: function (){
                 console.log(this.info);

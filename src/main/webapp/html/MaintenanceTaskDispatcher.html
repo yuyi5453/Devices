@@ -442,6 +442,11 @@
                     <device-info-readonly></device-info-readonly>
                     <h4>维修信息</h4>
                     <task-info-readonly></task-info-readonly>
+                    <h4>技术人员信息</h4>
+                    <el-button type="primary" @click="handleClick">选择技术人员</el-button>
+                    <div :style="style.container" v-show="visible.userFilter.value">
+                        <user-filter></user-filter>
+                    </div>
                 </div>
             </el-col>
         </el-row>
@@ -465,7 +470,15 @@
                         padding: '20px',
                         boxShadow: '0 2px 12px 0 rgba(0, 0, 0, 0.1)'
                     }
+                },
+                visible:{
+                    userFilter: {value: false}
                 }
+            }
+        },
+        methods: {
+            handleClick() {
+                this.visible.userFilter.value = true;
             }
         }
     }
