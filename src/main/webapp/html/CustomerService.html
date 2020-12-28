@@ -122,6 +122,7 @@
                     address: this.address
                 };
                 this.$emit('post-customer-info',info);
+
             }
         },
         watch: {
@@ -670,6 +671,9 @@
             },
             handleClick: function (){
                 console.log(this.info);
+                axios.post("/Devices/addCustomer",this.info).then(function (response) {
+                    console.log(response);
+                })
             }
         }
     }
@@ -740,6 +744,9 @@
             handleSave: function (){
                 console.log(this.info);
                 this.visible.filterContainer.value = false;
+                axios.post("/Devices/updateCustomer",this.info).then(function (response) {
+                    console.log(response);
+                })
             },
             handleDelete: function (){
                 console.log(this.info);
