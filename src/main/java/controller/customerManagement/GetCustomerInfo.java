@@ -10,6 +10,8 @@ import service.CustomerService;
 import util.json.RestResult;
 import util.json.ResultCode;
 
+import java.util.List;
+
 @RestController
 public class GetCustomerInfo {
     @Autowired
@@ -25,5 +27,11 @@ public class GetCustomerInfo {
         }else {
             return new RestResult().setCode(ResultCode.SUCCESS).setMessage("客户信息").setData(customer).toString();
         }
+    }
+
+    @RequestMapping("/getAllCustomer")
+    public String getAllCustomer(){
+        List<Customer> list = customerService.list();
+        return new RestResult().setData(list).toString();
     }
 }

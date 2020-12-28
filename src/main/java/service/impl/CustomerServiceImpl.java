@@ -22,6 +22,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> i
 
     @Override
     public String updateCustomer(Customer customer) {
+        log.debug(customer.toString());
         if(customer.getId()!=null) {
             this.updateById(customer);
         }
