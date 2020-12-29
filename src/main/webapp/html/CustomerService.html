@@ -573,7 +573,7 @@
                 <el-input v-model="reportTime" placeholder="报修时间"></el-input>
             </el-col>
             <el-col :span="4">
-                <el-button type="primary" icon="el-icon-search">搜索</el-button>
+                <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </el-col>
         </el-row>
         <el-row>
@@ -618,11 +618,27 @@
                 phone: '',
                 reportTime: '',
                 reportData: [],
+                reportDataCount: 0,
             }
         },
         methods: {
             handleCurrentChange :function (currentRow) {
                 this.$emit('post-row',currentRow);
+            },
+            handleSearch: function (){
+                var param = new URLSearchParams();
+                param.append('customerName',this.customerName);
+                param.append('phone',this.phone);
+                param.append('repairTime',this.reportTime);
+                param.append('currentPage',1);
+                var that = this;
+                axios.post('../getMaintenanceReport',param).then(function (response){
+                    that.reportData = JSON.parse(response.data).data;
+                    that.reportDataCount = +(JSON.parse(response.data).message);
+                })
+            },
+            mounted() {
+                this.handleSearch();
             }
         }
     }

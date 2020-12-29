@@ -1,6 +1,8 @@
 package service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import pojo.Device;
 import pojo.RepairRecord;
@@ -33,10 +35,9 @@ public class RepairRecordServiceImpl extends ServiceImpl<RepairRecordMapper, Rep
     @Autowired
     private DeviceService deviceService;
     @Override
-    public String getRecord(String phone) {
-//        List<Map> repairRecord = repairRecordMapper.getRepairRecord(phone);
-//        System.out.println(repairRecord);
-        return null;
+
+    public IPage getRecord(IPage page, Wrapper wrapper) {
+        return repairRecordMapper.getRepairRecord(page, wrapper);
     }
 
     @Override

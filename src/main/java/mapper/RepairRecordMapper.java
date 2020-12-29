@@ -1,5 +1,8 @@
 package mapper;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Constants;
 import org.apache.ibatis.annotations.Param;
 import pojo.Device;
 import pojo.RepairRecord;
@@ -17,6 +20,6 @@ import java.util.Map;
  * @since 2020-12-23
  */
 public interface RepairRecordMapper extends BaseMapper<RepairRecord> {
-
-
+    //public List<Map> getRepairRecord(@Param("phone") String phone);
+    public IPage getRepairRecord(IPage page, @Param(Constants.WRAPPER) Wrapper wrapper);
 }
