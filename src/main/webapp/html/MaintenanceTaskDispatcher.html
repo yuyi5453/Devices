@@ -286,6 +286,11 @@
                 userData: []
             }
         },
+        methods: {
+            handleCurrentChange: function (currentRow){
+                this.$emit('post-row',currentRow);
+            }
+        }
 
     }
 </script>
@@ -437,7 +442,7 @@
                 <div :style="style.container">
                     <h3>任务检索</h3>
                     <maintenance-task-filter
-                            @post-row="handleRow"
+                            @post-row="handleTaskRow"
                     ></maintenance-task-filter>
                 </div>
                 <br>
@@ -458,7 +463,7 @@
                     <h4>技术人员信息</h4>
                     <el-button type="primary" @click="handleClick">选择技术人员</el-button>
                     <div :style="style.container" v-show="visible.userFilter.value">
-                        <user-filter></user-filter>
+                        <user-filter @post-row="handleUserRow"></user-filter>
                     </div>
                 </div>
             </el-col>
@@ -494,8 +499,13 @@
             }
         },
         methods: {
-            handleRow: function (row) {
+            handleTaskRow: function (row) {
                 //将信息分发给4个显示组件
+            },
+            handleUserRow: function (row){
+                //信息传递给userInfoReadOnly
+                //axios
+                this.visible.userFilter.value = false;
             },
             handleClick: function () {
                 this.visible.userFilter.value = true;
