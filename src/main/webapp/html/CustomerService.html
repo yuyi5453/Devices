@@ -88,6 +88,7 @@
         ],
         data: function (){
             return{
+                id: '',
                 idcard: '',
                 customerType: '',
                 customerTypeOptions: [{
@@ -113,6 +114,7 @@
         methods: {
             postInfo: function (){
                 var info = {
+                    id: this.id,
                     idcard: this.idcard,
                     customerType: this.customerType,
                     companyName: this.companyName,
@@ -128,6 +130,7 @@
         },
         watch: {
             info (){
+                this.id = this.info.id;
                 this.idcard = this.info.idcard;
                 this.customerType = this.info.customerType;
                 this.companyName = this.info.companyName;
