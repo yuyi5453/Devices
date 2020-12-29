@@ -17,4 +17,5 @@ import java.util.List;
 public interface ServiceRecordService extends IService<ServiceRecord> {
     public List<ServiceRecord> selectUndispatchedTask(Integer status);
     public void updateTask(ServiceRecord serviceRecord);
+    public void Dispatch(Integer id,Integer userId);
 }
