@@ -20,4 +20,7 @@ public class EditMaintenanceReport {
         repairRecordService.updateById(record);
         return new RestResult().setMessage("成功").setCode(ResultCode.SUCCESS).toString();
     }
+
+
+
 }
