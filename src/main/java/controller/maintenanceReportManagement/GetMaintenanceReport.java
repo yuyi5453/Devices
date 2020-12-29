@@ -18,6 +18,6 @@ public class GetMaintenanceReport {
 
     @RequestMapping("/getMaintenanceReport")
     public String get(String phone){
-        return null;
+        return repairRecordService.getRecord(phone);
     }
 }
