@@ -7,6 +7,8 @@ import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+import java.util.Map;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -70,6 +72,11 @@ public class ServiceRecord implements Serializable {
     private BigDecimal materialCost;
 
     /**
+     * 备件费
+     */
+    private BigDecimal partCost;
+
+    /**
      * 状态
      */
     private Integer status;
@@ -80,4 +87,7 @@ public class ServiceRecord implements Serializable {
     private Integer delayDegree;
 
     private Integer repairManId;
+
+    @TableField(exist = false)
+    private Map<Part,Integer> part;
 }

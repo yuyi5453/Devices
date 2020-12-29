@@ -102,7 +102,8 @@ public class ServiceRecordServiceImpl extends ServiceImpl<ServiceRecordMapper, S
 
     public void Dispatch(Integer id,Integer userId){
         LambdaUpdateWrapper<ServiceRecord> lambdaUpdateWrapper=new LambdaUpdateWrapper<>();
-        User user=userMapper.selectById(userId);
+        ServiceRecord serviceRecord=serviceRecordMapper.selectById(id);
         lambdaUpdateWrapper.eq(ServiceRecord::getId,id).set(ServiceRecord::getRepairManId,userId);
+        Integer rows=serviceRecordMapper.update(serviceRecord,lambdaUpdateWrapper);
     }
 }
