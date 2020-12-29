@@ -29,8 +29,10 @@ public class RepairRecord implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
+    private Integer customerId;
+
     @TableField(exist = false)
-    private Customer repairMan;
+    private Customer customer;
 
     private Date repairTime;
 
@@ -38,4 +40,6 @@ public class RepairRecord implements Serializable {
 
     private Integer status;
 
+    @TableField(exist = false)
+    private Device device;
 }

@@ -326,7 +326,7 @@
                 <el-input v-model="engineer" placeholder="技术人员"></el-input>
             </el-col>
             <el-col :span="3">
-                <el-button type="primary">搜索</el-button>
+                <el-button @click="handleSearch" type="primary">搜索</el-button>
             </el-col>
         </el-row>
         <br>
@@ -425,6 +425,9 @@
         methods: {
             handleCurrentChange: function (currentRow){
                 this.$emit('post-row',currentRow);
+            },
+            handleSearch: function () {
+                axios.post("/")
             }
         }
     }
