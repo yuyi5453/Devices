@@ -4,6 +4,7 @@ import pojo.RepairRecord;
 import pojo.ServiceRecord;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -17,4 +18,7 @@ import java.util.List;
 public interface ServiceRecordService extends IService<ServiceRecord> {
     public List<ServiceRecord> selectUndispatchedTask(Integer status);
     public void updateTask(ServiceRecord serviceRecord);
+    public void Dispatch(Integer id,Integer userId);
+    public String getServiceRecord(HttpServletRequest request);
+
 }

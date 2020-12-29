@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.RepairRecordMapper">
 
+
     <select id="getRepairRecord" resultType="" resultMap="getRepairRecordResultMap">
         select c.id as cid idcard,customer_type,company_name,email,address,
         r.id as rid,repair_time,expected_time,status,
@@ -39,4 +40,5 @@
             <result column="optical_drive" property="opticalDrive"></result>
         </association>
     </resultMap>
+
 </mapper>

@@ -1,10 +1,10 @@
 document.querySelector('.img__btn').addEventListener('click', function() {
     document.querySelector('.content').classList.toggle('s--signup')
 })
-var na=document.getElementById('name_reg');
+var na=document.getElementById('Id_reg');
 var nametip = document.getElementById("nametip");
 
-var pawd =document.getElementById("pawd_reg");
+var pawd =document.getElementById("Password_reg");
 var ruo=document.getElementById('ruo');
 var zo=document.getElementById('zo');
 var qiang=document.getElementById('qiang');
@@ -24,19 +24,19 @@ na.onblur=function(){
     function z(re,e){//封装函数判断传入的数据
         if(e.value!=''){
             if(re.test(e.value)){
-                e.nextSibling.src='..//img/d.svg';
+                e.nextSibling.src='../static/img/d.svg';
                 nametip.innerHTML = "";
                 me=true;
             }
             else{
-                e.nextSibling.src='../img/c.svg';
+                e.nextSibling.src='../static/img/c.svg';
                 nametip.style.color ="#f00";
                 nametip.innerHTML = "3~15个中文字符或数字或字母组合";
                 me=false;
             }
         }
         else{
-            e.nextSibling.src='./images/c.svg';
+            e.nextSibling.src='./static/images/c.svg';
             nametip.innerHTML = "不能为空";
             nametip.style.color ="#f00";
             me=false;
@@ -105,18 +105,18 @@ pawd.onkeyup=function(){
 pwd.onblur=function(){//二次输入密码
     if(this.value!=''){
         if(this.value!=pawd.value){
-            this.nextSibling.src='../img/c.svg';
+            this.nextSibling.src='../static/img/c.svg';
                 pwdtip.style.color ="#f00";
                 pwdtip.innerHTML = "两次输入的密码不一致！";
         }
         else{
-            this.nextSibling.src='../img/d.svg';
+            this.nextSibling.src='../static/img/d.svg';
             
             ps[this.index].innerText="";
            
         }
     }else{
-        this.nextSibling.src='../img/c.svg';
+        this.nextSibling.src='../static/img/c.svg';
         pwdtip.style.color ="#f00";
         pwdtip.innerHTML = "不能为空！";
     }
@@ -155,7 +155,7 @@ element.onmousedown = function(e) {
            psilde = false;
         }else{
             l=b;
-            xbox.innerHTML='<div id="btn2"><img style="margin-top:2px ;width:15px;height=15px;" class="img1" src="../img/c.svg"/></div>';
+            xbox.innerHTML='<div id="btn2"><img style="margin-top:2px ;width:15px;height=15px;" class="img1" src="../static/img/c.svg"/></div>';
             d.nextElementSibling.innerText="验证通过";
             d.style.border='none';
             d.nextElementSibling.style.color="#090";

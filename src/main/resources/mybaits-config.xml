@@ -15,5 +15,14 @@
     </typeAliases>
 
     <mappers>
+        <mapper resource="mapper/xml/ChargeMapper.xml"/>
+        <mapper resource="mapper/xml/CustomerMapper.xml"/>
+        <mapper resource="mapper/xml/DeviceMapper.xml"/>
+        <mapper resource="mapper/xml/PartFlowMapper.xml"/>
+        <mapper resource="mapper/xml/PartMapper.xml"/>
+        <mapper resource="mapper/xml/PartRequireMapper.xml"/>
+        <mapper resource="mapper/xml/RepairRecordMapper.xml"/>
+        <mapper resource="mapper/xml/ServiceRecordMapper.xml"/>
+        <mapper resource="mapper/xml/UserMapper.xml"/>
     </mappers>
 </configuration>

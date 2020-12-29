@@ -35,6 +35,7 @@ public class RepairRecordServiceImpl extends ServiceImpl<RepairRecordMapper, Rep
     @Autowired
     private DeviceService deviceService;
     @Override
+
     public IPage getRecord(IPage page, Wrapper wrapper) {
         return repairRecordMapper.getRepairRecord(page, wrapper);
     }
