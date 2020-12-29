@@ -17,9 +17,7 @@ public class GetMaintenanceReport {
     RepairRecordService repairRecordService;
 
     @RequestMapping("/getMaintenanceReport")
-    public String get(){
-        List<RepairRecord> list = repairRecordService.list();
-        return new RestResult().setCode(ResultCode.SUCCESS).setMessage("成功").toString();
-
+    public String get(String phone){
+        return repairRecordService.getRecord(phone);
     }
 }
