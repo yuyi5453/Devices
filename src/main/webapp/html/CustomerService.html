@@ -244,45 +244,45 @@
                     <el-table-column
                             type="index"
                             fixed="left"
-                            width="50"
                     ></el-table-column>
                     <el-table-column
                             label="联系人"
                             prop="customerName"
                             fixed="left"
-                            width="100"
                     ></el-table-column>
                     <el-table-column
                             label="移动电话"
                             prop="phone"
                             fixed="left"
-                            width="100"
                     ></el-table-column>
                     <el-table-column
                             label="身份证号"
                             prop="idcard"
-                            width="150"
                     ></el-table-column>
                     <el-table-column
                             label="客户性质"
                             prop="customerType"
-                            width="100"
                     ></el-table-column>
                     <el-table-column
                             label="单位名称"
                             prop="companyName"
-                            width="150"
                     ></el-table-column>
                     <el-table-column
                             label="e-mail"
                             prop="email"
-                            width="150"
                     ></el-table-column>
                     <el-table-column
                             label="地址"
                             prop="address"
                     ></el-table-column>
                 </el-table>
+                <el-pagination
+                        layout="prev, pager, next"
+                        page-size=5
+                        :total=customerDataCount
+                        current-page=1
+                        @current-change="handlePageChange">
+                </el-pagination>
             </el-col>
         </el-row>
     </div>
@@ -296,6 +296,7 @@
                 phoneNumber: '',
                 idcard: '',
                 customerData: [],
+                customerDataCount: 0,
                 currentRow:{}
             }
         },
@@ -309,11 +310,30 @@
             handleSearch: function () {
                 var param = new URLSearchParams();
                 param.append('idcard',this.idcard);
+                param.append('phone',this.phoneNumber);
+                param.append('currentPage',1);
                 var that = this;
                 axios.post("/Devices/getCustomerInfo",param).then(function (response) {
                     var data = JSON.parse(response.data).data;
-                    that.customerData.splice(0);
-                    that.customerData.push(data);
+                    //that.customerData.splice(0);
+                    //that.customerData.push(data);
+                    that.customerData = data;
+                    that.customerDataCount = +(JSON.parse(response.data).message);
+                    console.log(data);
+                });
+            },
+            handlePageChange: function (current){
+                var param = new URLSearchParams();
+                param.append('idcard',this.idcard);
+                param.append('phone',this.phoneNumber);
+                param.append('currentPage',current);
+                var that = this;
+                axios.post("/Devices/getCustomerInfo",param).then(function (response) {
+                    var data = JSON.parse(response.data).data;
+                    //that.customerData.splice(0);
+                    //that.customerData.push(data);
+                    that.customerData = data;
+                    that.customerDataCount = +(JSON.parse(response.data).message);
                     console.log(data);
                 });
             }
@@ -873,6 +893,7 @@
                     <br>
                     <el-button type="success" @click="handleSave">保存</el-button>
                     <el-button type="danger" @click="handleDelete">删除</el-button>
+                    <el-button plain @click="handleClose">关闭</el-button>
                 </div>
             </el-col>
         </el-row>
@@ -912,13 +933,16 @@
             handleSave: function (){
                 console.log(this.info);
                 this.visible.filterContainer.value = false;
+                var that = this;
                 axios.post("/Devices/updateCustomer",this.info).then(function (response) {
-                    // 获取不到更新后表单的值
                     console.log(response);
                 })
             },
             handleDelete: function (){
                 console.log(this.info);
+                this.visible.filterContainer.value = false;
+            },
+            handleClose: function (){
                 this.visible.filterContainer.value = false;
             }
         }

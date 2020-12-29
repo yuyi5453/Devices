@@ -69,6 +69,14 @@
                 <el-input v-model="repairRecordDescription" placeholder="维修记录"></el-input>
             </el-col>
         </el-row>
+        <el-row :gutter="20">
+            <el-col :span="6">
+                <span>维修状态：{{status}}</span>
+            </el-col>
+            <el-col :span="6">
+                <span>维修延迟程度：{{delayDegree}}</span>
+            </el-col>
+        </el-row>
     </div>
 </template>
 <script>
@@ -79,10 +87,49 @@
                 distributeTime: '',
                 repairTime: '',
                 laborCost: '',
-                materialCost: ''
+                materialCost: '',
+                detectRecordDescription: '',
+                repairRecordDescription: '',
+                status: '',
+                delayDegree: ''
             }
         },
+        prop: [
+            'info'
+        ],
+        watch: {
+            info: function () {
+                this.distributeTime = this.info.distributeTime;
+                this.repairTime = this.info.repairTime;
+                this.laborCost = this.info.laborCost;
+                this.materialCost = this.info.materialCost;
+                this.detectRecordDescription = this.info.detectRecordDescription;
+                this.repairRecordDescription = this.info.repairRecordDescription;
+                this.status = this.info.status;
+                this.delayDegree = this.info.delayDegree;
+            }
+        }
 
+    }
+</script>
+<!-- 维护维修信息功能模块
+
+-->
+<template id="manipulateTaskInfo">
+    <div>
+        <el-row>
+            <el-col :span="20">
+                <task-info></task-info>
+            </el-col>
+        </el-row>
+    </div>
+</template>
+<script>
+    var manipulateTaskInfo = {
+        template: '#manipulateTaskInfo',
+        components: {
+            'task-info': taskInfo
+        }
     }
 </script>
 <!-- 导航栏模块 -->
@@ -110,13 +157,13 @@
         el: '#app',
         components: {
             'nav-bar': navBar,
-            'task-info': taskInfo,
+            'manipulate-task-info': manipulateTaskInfo,
         },
         data: {
             activeComponentName: '',
         },
         mounted() {
-            this.activeComponentName = 'task-info';
+            this.activeComponentName = 'manipulate-task-info';
         }
     })
 </script>
