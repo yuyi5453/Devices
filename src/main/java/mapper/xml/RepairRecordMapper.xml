@@ -2,12 +2,4 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.RepairRecordMapper">
 
-    <select id="getRepairRecord" resultType="map">
-        select c.id as cid, idcard,customer_type,company_name,email,address,phone,
-        r.id as rid,repair_time,expected_time,status,
-        d.id as did,type,brand,model,series_num,fault_type,HDD,memery,ac_adapter,battery,optical_drive
-        from customer c join repair_record r on c.id = r.customer_id
-        join device d on r.id = d.record_id
-        where c.phone = #{phone}
-    </select>
 </mapper>

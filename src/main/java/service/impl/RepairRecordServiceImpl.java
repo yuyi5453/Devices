@@ -34,8 +34,8 @@ public class RepairRecordServiceImpl extends ServiceImpl<RepairRecordMapper, Rep
     private DeviceService deviceService;
     @Override
     public String getRecord(String phone) {
-        List<Map> repairRecord = repairRecordMapper.getRepairRecord(phone);
-        System.out.println(repairRecord);
+//        List<Map> repairRecord = repairRecordMapper.getRepairRecord(phone);
+//        System.out.println(repairRecord);
         return null;
     }
 

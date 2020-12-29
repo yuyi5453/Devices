@@ -12,6 +12,7 @@ import service.ServiceRecordService;
 import util.json.RestResult;
 import util.json.ResultCode;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -26,4 +27,9 @@ public class GetUndispatchedTask {
         return new RestResult().setCode(ResultCode.SUCCESS).setData(list).toString();
     }
 
+    @RequestMapping("/getServiceRecord")
+    @ResponseBody
+    public String getServiceRecord(HttpServletRequest request){
+        return serviceRecordService.getServiceRecord(request);
+    }
 }
