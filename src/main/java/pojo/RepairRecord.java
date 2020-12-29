@@ -29,8 +29,6 @@ public class RepairRecord implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    private Integer repairManId;
-
     @TableField(exist = false)
     private Customer repairMan;
 
