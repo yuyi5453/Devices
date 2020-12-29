@@ -1,6 +1,5 @@
 package service.impl;
 
-import com.sun.xml.internal.org.jvnet.fastinfoset.RestrictedAlphabet;
 import pojo.Customer;
 import mapper.CustomerMapper;
 import service.CustomerService;
