@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%;">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.zhimg.com/element-ui@2.14.1/lib/theme-chalk/index.css">
+</head>
+<body style="height: 100%; margin: 0">
+<div id="app" style="height: 100%">
+    <el-container :style="{height: '100%', overflow: 'hidden'}">
+        <el-aside :style="{background: '#545c64'}">
+            <el-container>
+                <el-main>
+                    <nav-bar></nav-bar>
+                </el-main>
+                <el-footer>
+
+                </el-footer>
+            </el-container>
+        </el-aside>
+        <el-main :style="{height: '100%', overflow: 'auto'}">
+            <div style="padding: 20px;">
+                <component :is="activeComponentName"></component>
+            </div>
+        </el-main>
+    </el-container>
+</div>
+
+<!-- Vue -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<!-- 引入Element组件库 -->
+<script src="https://unpkg.zhimg.com/element-ui/lib/index.js"></script>
+<!-- 引入axios -->
+<script src="https://unpkg.zhimg.com/axios/dist/axios.min.js"></script>
+<!-- 维修任务组件
+
+-->
+<template id="taskInfo">
+    <div>
+        <el-row :gutter="20">
+            <el-col :span="6">
+                <label>分配时间</label>
+                <el-input v-model="distributeTime" placeholder="分配时间"></el-input>
+            </el-col>
+            <el-col :span="6">
+                <label>维修时间</label>
+                <el-input v-model="repairTime" placeholder="维修时间"></el-input>
+            </el-col>
+            <el-col :span="6">
+                <label>人工费</label>
+                <el-input v-model="laborCost" placeholder="人工费"></el-input>
+            </el-col>
+            <el-col :span="6">
+                <label>材料费</label>
+                <el-input v-model="materialCost" placeholder="材料费"></el-input>
+            </el-col>
+        </el-row>
+        <el-row :gutter="20">
+            <el-col :span="24">
+                <label>检测记录</label>
+                <el-input v-model="detectRecordDescription" placeholder="检测记录"></el-input>
+            </el-col>
+        </el-row>
+        <el-row :gutter="20">
+            <el-col :span="24">
+                <label>维修记录</label>
+                <el-input v-model="repairRecordDescription" placeholder="维修记录"></el-input>
+            </el-col>
+        </el-row>
+        <el-row :gutter="20">
+            <el-col :span="6">
+                <span>维修状态：{{status}}</span>
+            </el-col>
+            <el-col :span="6">
+                <span>维修延迟程度：{{delayDegree}}</span>
+            </el-col>
+        </el-row>
+    </div>
+</template>
+<script>
+    var taskInfo = {
+        template: '#taskInfo',
+        data: function () {
+            return {
+                distributeTime: '',
+                repairTime: '',
+                laborCost: '',
+                materialCost: '',
+                detectRecordDescription: '',
+                repairRecordDescription: '',
+                status: '',
+                delayDegree: ''
+            }
+        },
+        prop: [
+            'info'
+        ],
+        watch: {
+            info: function () {
+                this.distributeTime = this.info.distributeTime;
+                this.repairTime = this.info.repairTime;
+                this.laborCost = this.info.laborCost;
+                this.materialCost = this.info.materialCost;
+                this.detectRecordDescription = this.info.detectRecordDescription;
+                this.repairRecordDescription = this.info.repairRecordDescription;
+                this.status = this.info.status;
+                this.delayDegree = this.info.delayDegree;
+            }
+        }
+
+    }
+</script>
+<!-- 维护维修信息功能模块
+
+-->
+<template id="manipulateTaskInfo">
+    <div>
+        <el-row>
+            <el-col :span="20">
+                <task-info></task-info>
+            </el-col>
+        </el-row>
+    </div>
+</template>
+<script>
+    var manipulateTaskInfo = {
+        template: '#manipulateTaskInfo',
+        components: {
+            'task-info': taskInfo
+        }
+    }
+</script>
+<!-- 导航栏模块 -->
+<template id="navBar">
+    <div>
+        <el-menu
+                background-color="#545c64"
+                text-color="#fff"
+                active-text-color="#ffd04b"
+                :style="{border: '0'}">
+            <el-menu-item index="1">
+                <span>我的任务</span>
+            </el-menu-item>
+        </el-menu>
+    </div>
+</template>
+<script>
+    var navBar = {
+        template: '#navBar'
+    }
+</script>
+
+<script>
+    var app = new Vue({
+        el: '#app',
+        components: {
+            'nav-bar': navBar,
+            'manipulate-task-info': manipulateTaskInfo,
+        },
+        data: {
+            activeComponentName: '',
+        },
+        mounted() {
+            this.activeComponentName = 'manipulate-task-info';
+        }
+    })
+</script>
+</body>
+</html>

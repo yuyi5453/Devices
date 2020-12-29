@@ -88,6 +88,7 @@
         ],
         data: function (){
             return{
+                id: '',
                 idcard: '',
                 customerType: '',
                 customerTypeOptions: [{
@@ -113,6 +114,7 @@
         methods: {
             postInfo: function (){
                 var info = {
+                    id: this.id,
                     idcard: this.idcard,
                     customerType: this.customerType,
                     companyName: this.companyName,
@@ -128,6 +130,7 @@
         },
         watch: {
             info (){
+                this.id = this.info.id;
                 this.idcard = this.info.idcard;
                 this.customerType = this.info.customerType;
                 this.companyName = this.info.companyName;
@@ -149,29 +152,29 @@
     <div>
         <el-row :gutter="20">
             <el-col :span="8">
-                <p>身份证号：{{idcard}}</p>
+                <span>身份证号：{{idcard}}</span>
             </el-col>
             <el-col :span="8">
-                <p>客户类型：{{customerType}}</p>
+                <span>客户类型：{{customerType}}</span>
             </el-col>
             <el-col :span="8">
-                <p>单位名称：{{companyName}}</p>
+                <span>单位名称：{{companyName}}</span>
             </el-col>
         </el-row>
-        <el-row>
+        <el-row :gutter="20">
             <el-col :span="8">
-                <p>联系人：{{customerName}}</p>
+                <span>联系人：{{customerName}}</span>
             </el-col>
             <el-col :span="8">
-                <p>联系电话：{{phone}}</p>
+                <span>联系电话：{{phone}}</span>
             </el-col>
             <el-col :span="8">
-                <p>e-mail：{{email}}</p>
+                <span>e-mail：{{email}}</span>
             </el-col>
         </el-row>
-        <el-row>
+        <el-row :gutter="20">
             <el-col :span="16">
-                <p>地址：{{address}}</p>
+                <span>地址：{{address}}</span>
             </el-col>
         </el-row>
     </div>
@@ -241,45 +244,45 @@
                     <el-table-column
                             type="index"
                             fixed="left"
-                            width="50"
                     ></el-table-column>
                     <el-table-column
                             label="联系人"
                             prop="customerName"
                             fixed="left"
-                            width="100"
                     ></el-table-column>
                     <el-table-column
                             label="移动电话"
                             prop="phone"
                             fixed="left"
-                            width="100"
                     ></el-table-column>
                     <el-table-column
                             label="身份证号"
                             prop="idcard"
-                            width="150"
                     ></el-table-column>
                     <el-table-column
                             label="客户性质"
                             prop="customerType"
-                            width="100"
                     ></el-table-column>
                     <el-table-column
                             label="单位名称"
                             prop="companyName"
-                            width="150"
                     ></el-table-column>
                     <el-table-column
                             label="e-mail"
                             prop="email"
-                            width="150"
                     ></el-table-column>
                     <el-table-column
                             label="地址"
                             prop="address"
                     ></el-table-column>
                 </el-table>
+                <el-pagination
+                        layout="prev, pager, next"
+                        page-size=5
+                        :total=customerDataCount
+                        current-page=1
+                        @current-change="handlePageChange">
+                </el-pagination>
             </el-col>
         </el-row>
     </div>
@@ -293,6 +296,7 @@
                 phoneNumber: '',
                 idcard: '',
                 customerData: [],
+                customerDataCount: 0,
                 currentRow:{}
             }
         },
@@ -306,11 +310,30 @@
             handleSearch: function () {
                 var param = new URLSearchParams();
                 param.append('idcard',this.idcard);
+                param.append('phone',this.phoneNumber);
+                param.append('currentPage',1);
                 var that = this;
                 axios.post("/Devices/getCustomerInfo",param).then(function (response) {
                     var data = JSON.parse(response.data).data;
-                    that.customerData.splice(0);
-                    that.customerData.push(data);
+                    //that.customerData.splice(0);
+                    //that.customerData.push(data);
+                    that.customerData = data;
+                    that.customerDataCount = +(JSON.parse(response.data).message);
+                    console.log(data);
+                });
+            },
+            handlePageChange: function (current){
+                var param = new URLSearchParams();
+                param.append('idcard',this.idcard);
+                param.append('phone',this.phoneNumber);
+                param.append('currentPage',current);
+                var that = this;
+                axios.post("/Devices/getCustomerInfo",param).then(function (response) {
+                    var data = JSON.parse(response.data).data;
+                    //that.customerData.splice(0);
+                    //that.customerData.push(data);
+                    that.customerData = data;
+                    that.customerDataCount = +(JSON.parse(response.data).message);
                     console.log(data);
                 });
             }
@@ -469,7 +492,7 @@
 </script>
 
 <!-- 报修信息组件
-
+     发送数据：post-report-info
 -->
 <template id="reportInfo">
     <div @mouseleave="postInfo">
@@ -529,6 +552,77 @@
                     reportStatus: this.reportStatus
                 };
                 this.$emit('post-report-info',info);
+            }
+        }
+    }
+</script>
+
+<!-- 报修信息筛选器组件
+     发送数据：post-row
+ -->
+<template id="reportInfoFilter">
+    <div>
+        <el-row :gutter="20">
+            <el-col :span="4">
+                <el-input v-model="customerName" placeholder="联系人"></el-input>
+            </el-col>
+            <el-col :span="4">
+                <el-input v-model="phone" placeholder="移动电话"></el-input>
+            </el-col>
+            <el-col :span="4">
+                <el-input v-model="reportTime" placeholder="报修时间"></el-input>
+            </el-col>
+            <el-col :span="4">
+                <el-button type="primary" icon="el-icon-search">搜索</el-button>
+            </el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="24">
+                <el-table
+                        stripe
+                        :data="reportData"
+                        highlight-current-row
+                        @row-click="handleCurrentChange"
+                        width="100%">
+                    <el-table-column
+                            label="联系人"
+                            prop="customerName"
+                    ></el-table-column>
+                    <el-table-column
+                            label="移动电话"
+                            prop="phone"
+                    ></el-table-column>
+                    <el-table-column
+                            label="报修时间"
+                            prop="repairTime"
+                    ></el-table-column>
+                    <el-table-column
+                            label="产品类型"
+                            prop="deviceType"
+                    ></el-table-column>
+                    <el-table-column
+                            label="品牌"
+                            prop="brand"
+                    ></el-table-column>
+                </el-table>
+            </el-col>
+        </el-row>
+    </div>
+</template>
+<script>
+    var reportInfoFilter = {
+        template: '#reportInfoFilter',
+        data: function (){
+            return {
+                customerName: '',
+                phone: '',
+                reportTime: '',
+                reportData: [],
+            }
+        },
+        methods: {
+            handleCurrentChange :function (currentRow) {
+                this.$emit('post-row',currentRow);
             }
         }
     }
@@ -654,6 +748,74 @@
     }
 </script>
 
+<!-- 维护报修记录功能模块
+     组件：1.报修记录筛选器组件
+          2.用户信息显示组件
+          3.设备信息组件
+          4.报修信息组件
+-->
+<template id="manipulateMaintenanceReport">
+    <div>
+        <el-row>
+            <el-col :span="20">
+                <div :style="style.container">
+                    <report-info-filter></report-info-filter>
+                </div>
+                <div :style="style.container">
+                    <el-row :gutter="20">
+                        <el-col :span="16">
+                            <h3>编辑</h3>
+                        </el-col>
+                        <el-col :span="2">
+                            <el-button type="primary" plain size="small">保存更改</el-button>
+                        </el-col>
+                        <el-col :span="2">
+                            <el-button type="primary" plain size="small">撤销报修</el-button>
+                        </el-col>
+                        <el-col :span="2">
+                            <el-button type="primary" plain size="small">打印确认单</el-button>
+                        </el-col>
+                        <el-col :span="2">
+                            <el-button type="primary" plain size="small">确认报修</el-button>
+                        </el-col>
+                    </el-row>
+                    <h4>客户信息</h4>
+                    <customer-info-readonly></customer-info-readonly>
+                    <h4>设备信息</h4>
+                    <device-info></device-info>
+                    <h4>报修信息</h4>
+                    <report-info></report-info>
+                </div>
+            </el-col>
+        </el-row>
+    </div>
+</template>
+<script>
+    var manipulateMaintenanceReport = {
+        template: '#manipulateMaintenanceReport',
+        components: {
+            'report-info-filter': reportInfoFilter,
+            'customer-info-readonly': customerInfoReadOnly,
+            'device-info': deviceInfo,
+            'report-info': reportInfo
+        },
+        data: function () {
+            return {
+                style: {
+                    container: {
+                        margin: '20px',
+                        padding: '20px',
+                        boxShadow: '0 2px 12px 0 rgba(0, 0, 0, 0.1)'
+                    }
+                }
+            }
+        },
+        methods: {
+
+        },
+
+    }
+</script>
 <!-- 新建客户信息功能模块
      组件：1.用户信息组件
 -->
@@ -731,6 +893,7 @@
                     <br>
                     <el-button type="success" @click="handleSave">保存</el-button>
                     <el-button type="danger" @click="handleDelete">删除</el-button>
+                    <el-button plain @click="handleClose">关闭</el-button>
                 </div>
             </el-col>
         </el-row>
@@ -770,13 +933,16 @@
             handleSave: function (){
                 console.log(this.info);
                 this.visible.filterContainer.value = false;
+                var that = this;
                 axios.post("/Devices/updateCustomer",this.info).then(function (response) {
-                    // 获取不到更新后表单的值
                     console.log(response);
                 })
             },
             handleDelete: function (){
                 console.log(this.info);
+                this.visible.filterContainer.value = false;
+            },
+            handleClose: function (){
                 this.visible.filterContainer.value = false;
             }
         }
@@ -848,7 +1014,8 @@
             'nav-bar': navBar,
             'new-maintenance-report': newMaintenanceReport,
             'new-customer-info': newCustomerInfo,
-            'manipulate-customer-info': manipulateCustomerInfo
+            'manipulate-customer-info': manipulateCustomerInfo,
+            'manipulate-maintenance-report': manipulateMaintenanceReport
         },
         data: {
             activeComponentName: ''
@@ -864,6 +1031,9 @@
                 }
                 if(selected == '2-1') {
                     this.activeComponentName = 'new-maintenance-report'
+                }
+                if(selected == '2-2') {
+                    this.activeComponentName = 'manipulate-maintenance-report'
                 }
             }
         },

@@ -25,35 +25,7 @@ public class AddMaintenanceReport {
 
     @RequestMapping("/addMaintenanceReport")
     public String add(HttpServletRequest request){
-        String customerId = request.getParameter("customerId");
-        System.out.println(customerId);
-        RepairRecord repairRecord = new RepairRecord();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            repairRecord.setExpectedTime(sdf.parse(request.getParameter("expectedTime")));
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return "格式错误";
-        }
-        repairRecord.setRepairTime(new Date());
-        repairRecord.setStatus(RepairRecord.INPROCESS);
-        repairRecordService.save(repairRecord);
-        Integer recordId = repairRecord.getId();
 
-        Device device = new Device();
-        device.setRecordId(recordId);
-        device.setType(request.getParameter("type"));
-        device.setBrand(request.getParameter("brand"));
-        device.setModel(request.getParameter("model"));
-        device.setSeriesNum(request.getParameter("seriesNum"));
-        device.setFaultType(request.getParameter("faultType"));
-        device.setHdd(request.getParameter("hdd"));
-        device.setMemery(request.getParameter(",memery"));
-        device.setAcAdapter(request.getParameter("acAdapter"));
-        device.setBattery(request.getParameter("battery"));
-        device.setOpticalDrive(request.getParameter("opticalDrive"));
-
-        deviceService.save(device);
         return null;
 
     }
