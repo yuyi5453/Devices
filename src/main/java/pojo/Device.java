@@ -29,7 +29,7 @@ public class Device implements Serializable {
     @TableField(exist = false)
     private RepairRecord repairRecord;
 
-    private Integer type;
+    private String type;
 
     private String brand;
 
@@ -38,9 +38,9 @@ public class Device implements Serializable {
      */
     private String model;
 
-    private Integer seriesNum;
+    private String seriesNum;
 
-    private Integer faultType;
+    private String faultType;
 
     @TableField("HDD")
     private String hdd;
