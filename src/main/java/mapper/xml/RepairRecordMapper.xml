@@ -2,12 +2,41 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.RepairRecordMapper">
 
-    <select id="getRepairRecord" resultType="map">
+    <select id="getRepairRecord" resultType="" resultMap="getRepairRecordResultMap">
         select c.id as cid idcard,customer_type,company_name,email,address,
         r.id as rid,repair_time,expected_time,status,
         d.id as did,type,brand,model,series_num,fault_type,HDD,memery,ac_adapter,battery,optical_drive
         from customer c join repair_record r on c.id = r.customer_id
         join device d on r.id = d.record_id
-        where c.phone = #{phone}
+        ${ew.customSqlSegment}
     </select>
+    <resultMap id="getRepairRecordResultMap" type="pojo.RepairRecord">
+        <id column="rid" property="id"></id>
+        <result column="repair_time" property="repairTime"></result>
+        <result column="expect_time" property="expectTtme"></result>
+        <result column="status" property="status"></result>
+        <association property="customer" javaType="pojo.Customer">
+            <id column="cid" property="id"></id>
+            <result column="customer_name" property=""></result>
+            <result column="phone" property="phone"></result>
+            <result column="idcard" property="idcard"></result>
+            <result column="customer_type" property="customerType"></result>
+            <result column="company_name" property="companyName"></result>
+            <result column="email" property="email"></result>
+            <result column="address" property="address"></result>
+        </association>
+        <association property="device" javaType="pojo.Device">
+            <id column="did" property="id"></id>
+            <result column="type" property="type"></result>
+            <result column="brand" property="brand"></result>
+            <result column="model" property="model"></result>
+            <result column="series_num" property="seriesNum"></result>
+            <result column="fault_type" property="faultType"></result>
+            <result column="hdd" property="hdd"></result>
+            <result column="memery" property="memery"></result>
+            <result column="ac_adapter" property="acAdapter"></result>
+            <result column="battery" property="battery"></result>
+            <result column="optical_drive" property="opticalDrive"></result>
+        </association>
+    </resultMap>
 </mapper>

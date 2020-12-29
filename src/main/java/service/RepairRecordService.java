@@ -1,10 +1,13 @@
 package service;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import pojo.Device;
 import pojo.RepairRecord;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.util.List;
 
 /**
@@ -16,6 +19,6 @@ import java.util.List;
  * @since 2020-12-23
  */
 public interface RepairRecordService extends IService<RepairRecord> {
-    public String getRecord(String phone);
+    public IPage getRecord(IPage page, Wrapper wrapper);
     public String addRecord(HttpServletRequest request);
 }
