@@ -296,10 +296,10 @@
                 this.$emit('post-row',currentRow);
                 console.log(currentRow);
                 //为当前维修记录选择维修工程师
-                if(confirm("是否选择"+currentRow.userName+"工程师")==true){
-                    alert(customerInfoReadOnly.data().idcard)
-                    
-                }
+                // if(confirm("是否选择"+currentRow.userName+"工程师")==true){
+                //     alert(customerInfoReadOnly.data().idcard)
+                //
+                // }
             }
         },
         mounted() {
@@ -539,6 +539,9 @@
             handleUserRow: function (row){
                 //信息传递给userInfoReadOnly
                 //axios
+                if(confirm("是否选择"+currentRow.userName+"工程师")==true){
+
+                }
                 this.visible.userFilter.value = false;
             },
             handleClick: function () {
