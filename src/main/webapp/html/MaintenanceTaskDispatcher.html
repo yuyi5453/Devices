@@ -295,7 +295,6 @@
             handleCurrentChange: function (currentRow){
                 this.$emit('post-row',currentRow);
                 //为当前维修记录选择维修工程师
-
             }
         },
         mounted() {
@@ -549,6 +548,9 @@
                     );
                 }
                 //axios
+                if(confirm("是否选择"+currentRow.userName+"工程师")==true){
+
+                }
                 this.visible.userFilter.value = false;
             },
             handleClick: function () {
