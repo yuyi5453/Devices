@@ -6,7 +6,7 @@
     <select id="getRepairRecord" resultMap="getRepairRecordResultMap">
         select c.id as cid,customer_name,phone,idcard,customer_type,company_name,email,address,
         r.id as rid,repair_time,expected_time,status,
-        d.id as did,type,brand,model,series_num,fault_type,HDD,memery,ac_adapter,battery,optical_drive
+        d.id as did,d.type as dtype,brand,model,series_num,fault_type,HDD,memery,ac_adapter,battery,optical_drive
         from customer c join repair_record r on c.id = r.customer_id
         join device d on r.id = d.record_id
         ${ew.customSqlSegment}
@@ -28,7 +28,7 @@
         </association>
         <association property="device" javaType="pojo.Device">
             <id column="did" property="id"></id>
-            <result column="type" property="type"></result>
+            <result column="dtype" property="type"></result>
             <result column="brand" property="brand"></result>
             <result column="model" property="model"></result>
             <result column="series_num" property="seriesNum"></result>

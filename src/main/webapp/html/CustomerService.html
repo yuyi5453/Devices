@@ -477,6 +477,7 @@
         methods: {
             postInfo: function (){
                 var info = {
+                    deviceId: this.deviceId,
                     deviceType: this.deviceType,
                     deviceBrand: this.deviceBrand,
                     deviceModel: this.deviceModel,
@@ -558,13 +559,13 @@
                 reportStatus: '',
                 reportStatusOptions: [{
                     label: '进行中',
-                    value: '进行中'
+                    value: '1'
                 },{
                     label: '结束',
-                    value: '结束'
+                    value: '2'
                 },{
                     label: '撤销',
-                    value: '撤销'
+                    value: '3'
                 }]
             }
         },
@@ -686,11 +687,11 @@
                                 address: data[i].customer.address,
                             },
                             deviceInfo: {
-                                diveceId: data[i].device.id,
+                                deviceId: data[i].device.id,
                                 deviceType: data[i].device.type,
                                 deviceBrand: data[i].device.brand,
                                 deviceModel: data[i].device.model,
-                                deviceSeries: data[i].device.seriseNum,
+                                deviceSeries: data[i].device.seriesNum,
                                 faultType: data[i].device.faultType,
                                 hdd: data[i].device.hdd,
                                 ram: data[i].device.memery,
@@ -850,7 +851,7 @@
                 <div :style="style.container">
                     <report-info-filter @post-row="handleRow"></report-info-filter>
                 </div>
-                <div :style="style.container">
+                <div :style="style.container" v-show="visible.editor.value">
                     <el-row :gutter="20">
                         <el-col :span="16">
                             <h3>编辑</h3>
@@ -899,6 +900,9 @@
                         boxShadow: '0 2px 12px 0 rgba(0, 0, 0, 0.1)'
                     }
                 },
+                visible:{
+                    editor:{value: false}
+                },
                 customerInfoData: {},
                 deviceInfoData: {},
                 reportInfoData: {}
@@ -909,6 +913,7 @@
                 this.customerInfoData = row.customerInfo;
                 this.deviceInfoData = row.deviceInfo;
                 this.reportInfoData = row.reportInfo;
+                this.visible.editor.value = true;
             },
             handleDeviceInfo: function (info){
                 this.deviceInfoData = info;
@@ -917,13 +922,36 @@
                 this.reportInfoData = info;
             },
             handleUpdate: function (){
+                var param  = new URLSearchParams();
+                param.append('repairRecordId',this.reportInfoData.reportId);
+                param.append('reportTime',this.reportInfoData.reportTime);
+                param.append('estimateCompleteTime',this.reportInfoData.estimateCompleteTime);
+                param.append('reportStatus',this.reportInfoData.reportStatus);
+                param.append('deviceId',this.deviceInfoData.deviceId);
+                param.append('deviceType',this.deviceInfoData.deviceType);
+                param.append('deviceModel',this.deviceInfoData.deviceModel);
+                param.append('deviceSeries',this.deviceInfoData.deviceSeries);
+                param.append('faultType',this.deviceInfoData.faultType);
+                param.append('hdd',this.deviceInfoData.hdd);
+                param.append('ram',this.deviceInfoData.ram);
+                param.append('ACadapter',this.deviceInfoData.ACadapter);
+                param.append('battery',this.deviceInfoData.battery);
+                param.append('CDROM',this.deviceInfoData.CDROM);
+                axios.post('../editMaintenanceReport',param).then(function (response){
 
+                })
+                this.visible.editor.value = false;
             },
             handlePrint: function (){
 
             },
             handleConfirm: function (){
+                var param = new URLSearchParams();
+                param.append('repairRecordId',this.reportInfoData.reportId);
+                axios.post('../postConfirmationForm',param).then(function (response){
 
+                });
+                this.visible.editor.value = false;
             }
 
         },
