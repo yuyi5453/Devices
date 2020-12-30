@@ -294,9 +294,20 @@
         methods: {
             handleCurrentChange: function (currentRow){
                 this.$emit('post-row',currentRow);
+                console.log(currentRow);
+                //为当前维修记录选择维修工程师
             }
+        },
+        mounted() {
+            var that = this;
+            axios.post("/Devices/getEngineer").then(
+                function (response) {
+                    var data = JSON.parse(response.data).data;
+                    console.log(data);
+                    that.userData = data;
+                }
+            );
         }
-
     }
 </script>
 <!-- 维修任务过滤器组件 -->
