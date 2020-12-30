@@ -350,6 +350,7 @@
 </script>
 
 <!-- 设备信息组件
+     接收数据：props['info']
      发送数据：post-device-info
 -->
 <template id="deviceInfo">
@@ -430,8 +431,12 @@
 <script>
     var deviceInfo = {
         template: '#deviceInfo',
+        props: [
+            'info'
+        ],
         data: function (){
             return {
+                deviceId: '',
                 deviceType: '',
                 deviceTypeOptions: [{
                     label: '台式机',
@@ -487,11 +492,27 @@
                 };
                 this.$emit('post-device-info',info);
             }
+        },
+        watch: {
+            info: function (){
+                this.deviceId = this.info.deviceId;
+                this.deviceType = this.info.deviceType;
+                this.deviceBrand = this.info.deviceBrand;
+                this.deviceModel = this.info.deviceModel;
+                this.deviceSeries = this.info.deviceSeries;
+                this.faultType = this.info.faultType;
+                this.hdd = this.info.hdd;
+                this.ram = this.info.ram;
+                this.ACadapter = this.info.ACadapter;
+                this.battery = this.info.battery;
+                this.CDROM = this.info.CDROM;
+            }
         }
     }
 </script>
 
 <!-- 报修信息组件
+     接收数据：props['info']
      发送数据：post-report-info
 -->
 <template id="reportInfo">
@@ -525,8 +546,12 @@
 <script>
     var reportInfo = {
         template: '#reportInfo',
+        props: [
+            'info'
+        ],
         data: function (){
             return {
+                reportId: '',
                 reportTime: '',
                 estimateCost: '',
                 estimateCompleteTime: '',
@@ -552,6 +577,14 @@
                     reportStatus: this.reportStatus
                 };
                 this.$emit('post-report-info',info);
+            }
+        },
+        watch: {
+            info :function (){
+                this.reportId = this.info.id;
+                this.reportTime = this.info.reportTime;
+                this.estimateCompleteTime = this.info.estimateCompleteTime;
+                this.reportStatus = this.info.reportStatus;
             }
         }
     }
@@ -602,7 +635,7 @@
                     ></el-table-column>
                     <el-table-column
                             label="品牌"
-                            prop="brand"
+                            prop="deviceBrand"
                     ></el-table-column>
                 </el-table>
             </el-col>
@@ -633,13 +666,53 @@
                 param.append('currentPage',1);
                 var that = this;
                 axios.post('../getMaintenanceReport',param).then(function (response){
-                    that.reportData = JSON.parse(response.data).data;
+                    var data = JSON.parse(response.data).data;
+                    that.reportData.length = 0;
+                    for(var i = 0; i < data.length; i++){
+                        var report = {
+                            customerName: data[i].customer.customerName,
+                            phone: data[i].customer.phone,
+                            repairTime: data[i].repairTime,
+                            deviceType: data[i].device.type,
+                            deviceBrand: data[i].device.brand,
+                            customerInfo: {
+                                customerId: data[i].customer.id,
+                                customerName: data[i].customer.customerName,
+                                phone: data[i].customer.phone,
+                                idcard: data[i].customer.idcard,
+                                customerType: data[i].customer.customerType,
+                                companyName: data[i].customer.companyName,
+                                email: data[i].customer.email,
+                                address: data[i].customer.address,
+                            },
+                            deviceInfo: {
+                                diveceId: data[i].device.id,
+                                deviceType: data[i].device.type,
+                                deviceBrand: data[i].device.brand,
+                                deviceModel: data[i].device.model,
+                                deviceSeries: data[i].device.seriseNum,
+                                faultType: data[i].device.faultType,
+                                hdd: data[i].device.hdd,
+                                ram: data[i].device.memery,
+                                ACadapter: data[i].device.acAdapter,
+                                battery: data[i].device.battery,
+                                CDROM: data[i].device.opticalDrive
+                            },
+                            reportInfo: {
+                                reportId: data[i].id,
+                                reportTime: data[i].repairTime,
+                                estimateCompleteTime: data[i].expectTime,
+                                reportStatus: data[i].status,
+                            }
+                        }
+                        that.reportData.push(report);
+                    }
                     that.reportDataCount = +(JSON.parse(response.data).message);
                 })
-            },
-            mounted() {
-                this.handleSearch();
             }
+        },
+        mounted() {
+            this.handleSearch();
         }
     }
 </script>
@@ -775,7 +848,7 @@
         <el-row>
             <el-col :span="20">
                 <div :style="style.container">
-                    <report-info-filter></report-info-filter>
+                    <report-info-filter @post-row="handleRow"></report-info-filter>
                 </div>
                 <div :style="style.container">
                     <el-row :gutter="20">
@@ -783,24 +856,26 @@
                             <h3>编辑</h3>
                         </el-col>
                         <el-col :span="2">
-                            <el-button type="primary" plain size="small">保存更改</el-button>
+                            <el-button type="primary" plain size="small" @click="handleUpdate">保存更改</el-button>
                         </el-col>
                         <el-col :span="2">
                             <el-button type="primary" plain size="small">撤销报修</el-button>
                         </el-col>
                         <el-col :span="2">
-                            <el-button type="primary" plain size="small">打印确认单</el-button>
+                            <el-button type="primary" plain size="small" @click="handlePrint">打印确认单</el-button>
                         </el-col>
                         <el-col :span="2">
-                            <el-button type="primary" plain size="small">确认报修</el-button>
+                            <el-button type="primary" plain size="small" @click="handleConfirm">确认报修</el-button>
                         </el-col>
                     </el-row>
                     <h4>客户信息</h4>
-                    <customer-info-readonly></customer-info-readonly>
+                    <customer-info-readonly :info="customerInfoData"></customer-info-readonly>
                     <h4>设备信息</h4>
-                    <device-info></device-info>
+                    <device-info
+                            :info="deviceInfoData"
+                            @post-device-info="handleDeviceInfo"></device-info>
                     <h4>报修信息</h4>
-                    <report-info></report-info>
+                    <report-info :info="reportInfoData"></report-info>
                 </div>
             </el-col>
         </el-row>
@@ -823,10 +898,33 @@
                         padding: '20px',
                         boxShadow: '0 2px 12px 0 rgba(0, 0, 0, 0.1)'
                     }
-                }
+                },
+                customerInfoData: {},
+                deviceInfoData: {},
+                reportInfoData: {}
             }
         },
         methods: {
+            handleRow: function (row){
+                this.customerInfoData = row.customerInfo;
+                this.deviceInfoData = row.deviceInfo;
+                this.reportInfoData = row.reportInfo;
+            },
+            handleDeviceInfo: function (info){
+                this.deviceInfoData = info;
+            },
+            handleReportInfo: function (info){
+                this.reportInfoData = info;
+            },
+            handleUpdate: function (){
+
+            },
+            handlePrint: function (){
+
+            },
+            handleConfirm: function (){
+
+            }
 
         },
 

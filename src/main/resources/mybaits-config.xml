@@ -13,7 +13,6 @@
     <typeAliases>
         <package name="com.ding.pojo"/>
     </typeAliases>
-
     <mappers>
         <mapper resource="mapper/xml/ChargeMapper.xml"/>
         <mapper resource="mapper/xml/CustomerMapper.xml"/>
