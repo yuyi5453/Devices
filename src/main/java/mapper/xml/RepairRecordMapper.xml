@@ -14,7 +14,7 @@
     <resultMap id="getRepairRecordResultMap" type="pojo.RepairRecord">
         <id column="rid" property="id"></id>
         <result column="repair_time" property="repairTime"></result>
-        <result column="expect_time" property="expectTtme"></result>
+        <result column="expected_time" property="expectedTime"></result>
         <result column="status" property="status"></result>
         <association property="customer" javaType="pojo.Customer">
             <id column="cid" property="id"></id>

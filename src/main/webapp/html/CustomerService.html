@@ -41,9 +41,12 @@
     <div @mouseleave="postInfo">
         <el-row :gutter="20">
             <el-col :span="16">
+                <label>身份证号</label>
                 <el-input v-model="idcard" placeholder="身份证号"></el-input>
             </el-col>
             <el-col :span="8">
+                <label>用户性质</label>
+                <br>
                 <el-select v-model="customerType" clearable placeholder="用户性质">
                     <el-option
                             v-for="option in customerTypeOptions"
@@ -57,24 +60,29 @@
         <br>
         <el-row :gutter="20">
             <el-col :span="8">
+                <label>单位名称</label>
                 <el-input v-model="companyName" placeholder="单位名称"></el-input>
             </el-col>
             <el-col :span="8">
+                <label>联系方式</label>
                 <el-input v-model="phone" placeholder="联系方式"></el-input>
             </el-col>
             <el-col :span="8">
+                <label>联系人</label>
                 <el-input v-model="customerName" placeholder="联系人"></el-input>
             </el-col>
         </el-row>
         <br>
         <el-row :gutter="20">
             <el-col :span="24">
+                <label>e-mail</label>
                 <el-input v-model="email" placeholder="e-mail"></el-input>
             </el-col>
         </el-row>
         <br>
         <el-row :gutter="20">
             <el-col :span="24">
+                <label>客户地址</label>
                 <el-input v-model="address" placeholder="客户地址"></el-input>
             </el-col>
         </el-row>
@@ -237,6 +245,7 @@
             <el-col :span="24">
                 <el-table
                     stripe
+                    v-loading="loading"
                     :data="customerData"
                     highlight-current-row
                     @row-click="handleCurrentChange"
@@ -297,7 +306,8 @@
                 idcard: '',
                 customerData: [],
                 customerDataCount: 0,
-                currentRow:{}
+                currentRow:{},
+                loading: true
             }
         },
         methods: {
@@ -308,6 +318,7 @@
                 //console.log(this.currentRow);
             },
             handleSearch: function () {
+                this.loading = true;
                 var param = new URLSearchParams();
                 param.append('idcard',this.idcard);
                 param.append('phone',this.phoneNumber);
@@ -320,9 +331,11 @@
                     that.customerData = data;
                     that.customerDataCount = +(JSON.parse(response.data).message);
                     console.log(data);
+                    that.loading = false;
                 });
             },
             handlePageChange: function (current){
+                this.loading = true;
                 var param = new URLSearchParams();
                 param.append('idcard',this.idcard);
                 param.append('phone',this.phoneNumber);
@@ -335,17 +348,13 @@
                     that.customerData = data;
                     that.customerDataCount = +(JSON.parse(response.data).message);
                     console.log(data);
+                    that.loading = false;
                 });
             }
         },
-        // mounted() {
-        //     var that = this;
-        //     axios.post("/Devices/getAllCustomer").then(function (response) {
-        //         var data = JSON.parse(response.data).data;
-        //         that.customerData = data;
-        //         console.log(data);
-        //     });
-        // }
+        created(){
+            this.handleSearch();
+        }
     }
 </script>
 
@@ -357,6 +366,8 @@
     <div @mouseleave="postInfo">
         <el-row :gutter="20">
             <el-col :span="6">
+                <label>设备类型</label>
+                <br>
                 <el-select v-model="deviceType" clearable placeholder="请选择设备类型">
                     <el-option
                             v-for="option in deviceTypeOptions"
@@ -367,12 +378,15 @@
                 </el-select>
             </el-col>
             <el-col :span="6">
+                <label>设备品牌</label>
                 <el-input v-model="deviceBrand" placeholder="设备品牌"></el-input>
             </el-col>
             <el-col :span="6">
+                <label>设备型号</label>
                 <el-input v-model="deviceModel" placeholder="设备型号"></el-input>
             </el-col>
             <el-col :span="6">
+                <label>设备系列号</label>
                 <el-input v-model="deviceSeries" placeholder="设备系列号"></el-input>
             </el-col>
         </el-row>
@@ -387,6 +401,8 @@
         -->
         <el-row :gutter="20">
             <el-col :span="6">
+                <label>故障类型</label>
+                <br>
                 <el-select v-model="faultType" clearable placeholder="故障类型">
                     <el-option
                             v-for="option in faultTypeOptions"
@@ -408,21 +424,26 @@
         -->
         <el-row :gutter="20">
             <el-col :span="8">
+                <label>HDD</label>
                 <el-input v-model="hdd" placeholder="HDD"></el-input>
             </el-col>
             <el-col :span="8">
+                <label>内存</label>
                 <el-input v-model="ram" placeholder="内存"></el-input>
             </el-col>
             <el-col :span="8">
+                <label>AC适配器</label>
                 <el-input v-model="ACadapter" placeholder="AC适配器"></el-input>
             </el-col>
         </el-row>
         <br>
         <el-row :gutter="20">
             <el-col :span="8">
+                <label>电池</label>
                 <el-input v-model="battery" placeholder="电池"></el-input>
             </el-col>
             <el-col :span="8">
+                <label>外接光驱</label>
                 <el-input v-model="CDROM" placeholder="外接光驱"></el-input>
             </el-col>
         </el-row>
@@ -520,15 +541,16 @@
     <div @mouseleave="postInfo">
         <el-row :gutter="20">
             <el-col :span="8">
+                <label>报修时间</label>
                 <el-input v-model="reportTime" placeholder="报修时间"></el-input>
             </el-col>
             <el-col :span="8">
-                <el-input v-model="estimateCost" placeholder="预估费用"></el-input>
+                <label>预估完成时间</label>
+                <el-input v-model="estimateCompleteTime" placeholder="预估完成时间"></el-input>
             </el-col>
-        </el-row>
-        <br>
-        <el-row :gutter="20">
             <el-col :span="8">
+                <label>报修状态</label>
+                <br>
                 <el-select v-model="reportStatus" clearable placeholder="报修状态">
                     <el-option
                             v-for="option in reportStatusOptions"
@@ -537,9 +559,6 @@
                             :value="option.value">
                     </el-option>
                 </el-select>
-            </el-col>
-            <el-col :span="8">
-                <el-input v-model="estimateCompleteTime" placeholder="预估完成时间"></el-input>
             </el-col>
         </el-row>
     </div>
@@ -554,7 +573,7 @@
             return {
                 reportId: '',
                 reportTime: '',
-                estimateCost: '',
+                //estimateCost: '',
                 estimateCompleteTime: '',
                 reportStatus: '',
                 reportStatusOptions: [{
@@ -572,8 +591,9 @@
         methods: {
             postInfo: function (){
                 var info = {
+                    reportId: this.reportId,
                     reportTime: this.reportTime,
-                    estimateCost: this.estimateCost,
+                    //estimateCost: this.estimateCost,
                     estimateCompleteTime: this.estimateCompleteTime,
                     reportStatus: this.reportStatus
                 };
@@ -582,10 +602,10 @@
         },
         watch: {
             info :function (){
-                this.reportId = this.info.id;
+                this.reportId = this.info.reportId;
                 this.reportTime = this.info.reportTime;
                 this.estimateCompleteTime = this.info.estimateCompleteTime;
-                this.reportStatus = this.info.reportStatus;
+                this.reportStatus = this.reportStatusOptions[this.info.reportStatus-1].value;
             }
         }
     }
@@ -614,6 +634,7 @@
             <el-col :span="24">
                 <el-table
                         stripe
+                        v-loading="loading"
                         :data="reportData"
                         highlight-current-row
                         @row-click="handleCurrentChange"
@@ -648,6 +669,7 @@
         template: '#reportInfoFilter',
         data: function (){
             return {
+                loading: true,
                 customerName: '',
                 phone: '',
                 reportTime: '',
@@ -660,6 +682,7 @@
                 this.$emit('post-row',currentRow);
             },
             handleSearch: function (){
+                this.loading = true;
                 var param = new URLSearchParams();
                 param.append('customerName',this.customerName);
                 param.append('phone',this.phone);
@@ -673,7 +696,7 @@
                         var report = {
                             customerName: data[i].customer.customerName,
                             phone: data[i].customer.phone,
-                            repairTime: data[i].repairTime,
+                            repairTime: new Date(data[i].repairTime).toLocaleDateString(),
                             deviceType: data[i].device.type,
                             deviceBrand: data[i].device.brand,
                             customerInfo: {
@@ -701,18 +724,19 @@
                             },
                             reportInfo: {
                                 reportId: data[i].id,
-                                reportTime: data[i].repairTime,
-                                estimateCompleteTime: data[i].expectTime,
+                                reportTime: new Date(data[i].repairTime).toLocaleDateString(),
+                                estimateCompleteTime: new Date(data[i].expectedTime).toLocaleDateString(),
                                 reportStatus: data[i].status,
                             }
                         }
                         that.reportData.push(report);
                     }
                     that.reportDataCount = +(JSON.parse(response.data).message);
-                })
+                    that.loading = false;
+                });
             }
         },
-        mounted() {
+        created() {
             this.handleSearch();
         }
     }
@@ -853,14 +877,11 @@
                 </div>
                 <div :style="style.container" v-show="visible.editor.value">
                     <el-row :gutter="20">
-                        <el-col :span="16">
+                        <el-col :span="18">
                             <h3>编辑</h3>
                         </el-col>
                         <el-col :span="2">
                             <el-button type="primary" plain size="small" @click="handleUpdate">保存更改</el-button>
-                        </el-col>
-                        <el-col :span="2">
-                            <el-button type="primary" plain size="small">撤销报修</el-button>
                         </el-col>
                         <el-col :span="2">
                             <el-button type="primary" plain size="small" @click="handlePrint">打印确认单</el-button>
@@ -874,9 +895,13 @@
                     <h4>设备信息</h4>
                     <device-info
                             :info="deviceInfoData"
-                            @post-device-info="handleDeviceInfo"></device-info>
+                            @post-device-info="handleDeviceInfo"
+                    ></device-info>
                     <h4>报修信息</h4>
-                    <report-info :info="reportInfoData"></report-info>
+                    <report-info
+                            :info="reportInfoData"
+                            @post-report-info="handleReportInfo"
+                    ></report-info>
                 </div>
             </el-col>
         </el-row>
@@ -920,6 +945,7 @@
             },
             handleReportInfo: function (info){
                 this.reportInfoData = info;
+                console.log(info);
             },
             handleUpdate: function (){
                 var param  = new URLSearchParams();

@@ -25,9 +25,9 @@ public class EditMaintenanceReport {
     @ResponseBody
     public String edit(HttpServletRequest request){
         RepairRecord repairRecord = repairRecordService.getById(request.getParameter("repairRecordId"));
-        //repairRecord.setRepairTime(new Date(request.getParameter("reportTime")));
-        //repairRecord.setExpectedTime(new Date(request.getParameter("estimateCompleteTime")));
-        //repairRecord.setStatus(Integer.parseInt(request.getParameter("status")));
+        repairRecord.setRepairTime(new Date(request.getParameter("reportTime")));
+        repairRecord.setExpectedTime(new Date(request.getParameter("estimateCompleteTime")));
+        repairRecord.setStatus(Integer.parseInt(request.getParameter("reportStatus")));
         repairRecordService.updateById(repairRecord);
         Device device = deviceService.getById(request.getParameter("deviceId"));
         device.setType(request.getParameter("deviceType"));
