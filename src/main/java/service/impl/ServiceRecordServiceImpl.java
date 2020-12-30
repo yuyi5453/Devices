@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import mapper.RepairRecordMapper;
 import mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import pojo.*;
 import mapper.ServiceRecordMapper;
 import service.ServiceRecordService;
@@ -13,10 +14,8 @@ import org.springframework.stereotype.Service;
 import util.json.RestResult;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * <p>
@@ -63,15 +62,24 @@ public class ServiceRecordServiceImpl extends ServiceImpl<ServiceRecordMapper, S
             hs.put("deviceModel",m.get("model"));
             hs.put("seriesNum",m.get("series_num"));
             hs.put("status",m.get("r_status"));
-            hs.put("engineer",m.get("user_name"));
+            if(!StringUtils.isEmpty(m.get("repair_man_id"))){
+                System.out.println(m.get("repair_man_id"));
+                hs.put("engineer",userMapper.selectById(m.get("repair_man_id").toString()).getUserName());
+            }
+
 
             /*
             向前端传递客户信息
              */
             Customer customer = new Customer();
             customer.setId((Integer) m.get("cid"));
+            customer.setIdcard((String) m.get("idcard"));
+            customer.setPhone((String) m.get("phone"));
             customer.setCustomerName((String) m.get("customer_name"));
-
+            customer.setAddress((String) m.get("address"));
+            customer.setCompanyName((String) m.get("company_name"));
+            customer.setEmail((String) m.get("email"));
+            customer.setCustomerType((String) m.get("customer_type"));
             hs.put("customer",customer);
 
             /*
@@ -79,9 +87,16 @@ public class ServiceRecordServiceImpl extends ServiceImpl<ServiceRecordMapper, S
              */
             Device device = new Device();
             device.setId((Integer) m.get("did"));
+            device.setType((String) m.get("type"));
             device.setBrand((String) m.get("brand"));
             device.setModel((String) m.get("model"));
-
+            device.setSeriesNum((String) m.get("series_num"));
+            device.setFaultType((String) m.get("fault_type"));
+            device.setHdd((String) m.get("HDD"));
+            device.setMemery((String) m.get("memery"));
+            device.setAcAdapter((String) m.get("ac_adapter"));
+            device.setBattery((String) m.get("battery"));
+            device.setOpticalDrive((String) m.get("optical_drive"));
             hs.put("device",device);
 
             /*
@@ -89,7 +104,15 @@ public class ServiceRecordServiceImpl extends ServiceImpl<ServiceRecordMapper, S
              */
             ServiceRecord serviceRecord = new ServiceRecord();
             serviceRecord.setId((Integer) m.get("sid"));
-
+            serviceRecord.setRepairManId((String) m.get("repair_man_id"));
+            serviceRecord.setDistributeTime((Date) m.get("distribute_time"));
+            serviceRecord.setDetectRecordDescription((String) m.get("detect_record"));
+            serviceRecord.setRepairRecordDescription((String) m.get("repair_record"));
+            serviceRecord.setWorkload((String) m.get("workload"));
+            serviceRecord.setLaborCost((BigDecimal) m.get("labor_cost"));
+            serviceRecord.setMaterialCost((BigDecimal) m.get("material_cost"));
+            serviceRecord.setDelayDegree((Integer) m.get("delay_degree"));
+            serviceRecord.setStatus((Integer) m.get("s_status"));
             hs.put("serviceRecord",serviceRecord);
 
             list.add(hs);

@@ -157,7 +157,10 @@
             }
         },
         methods: {
-
+            postInfo: function (){
+                var info = {};
+                this.$emit('post-device-info',info);
+            }
         },
         prop: [
             'info'
@@ -513,6 +516,10 @@
         methods: {
             handleTaskRow: function (row) {
                 //将信息分发给4个显示组件
+                console.log(row);
+                this.customerInfoData = row.customer;
+                this.deviceInfoData = row.device;
+                this.taskInfoData = row.serviceRecord;
             },
             handleUserRow: function (row){
                 //信息传递给userInfoReadOnly
