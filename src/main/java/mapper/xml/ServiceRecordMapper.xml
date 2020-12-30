@@ -7,12 +7,10 @@
         r.id AS rid,r.repair_time AS report_time,expected_time,r.status AS r_status,
         d.id AS did,type,brand,model,series_num,fault_type,HDD,memery,ac_adapter,battery,optical_drive,
         s.id AS sid,repair_man_id,distribute_time,detect_record,repair_record,s.repair_time AS repair_time,
-        workload,labor_cost,material_cost,delay_degree,s.status AS s_status,
-        u.id as uid,user_name
+        workload,labor_cost,material_cost,delay_degree,s.status AS s_status
         FROM customer c JOIN repair_record r ON c.id = r.customer_id
         JOIN device d ON r.id = d.record_id
         JOIN service_record s ON s.record_id = r.id
-        JOIN user u on s.repair_man_id = u.id
         ${ew.customSqlSegment}
     </select>
 </mapper>

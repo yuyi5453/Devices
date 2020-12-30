@@ -86,7 +86,7 @@ public class ServiceRecord implements Serializable {
      */
     private Integer delayDegree;
 
-    private Integer repairManId;
+    private String repairManId;
 
     @TableField(exist = false)
     private Map<Part,Integer> part;
