@@ -21,7 +21,7 @@ public class PostConfirmationForm {
         ServiceRecord serviceRecord = new ServiceRecord();
         serviceRecord.setRecordId(Integer.parseInt(repairRecordId));
         serviceRecord.setStatus(ServiceRecord.UNASSIGNED);
-        serviceRecordService.save(new ServiceRecord());
+        serviceRecordService.save(serviceRecord);
         return new RestResult().setCode(ResultCode.SUCCESS).toString();
     }
 }

@@ -34,11 +34,160 @@
 <script src="https://unpkg.zhimg.com/element-ui/lib/index.js"></script>
 <!-- 引入axios -->
 <script src="https://unpkg.zhimg.com/axios/dist/axios.min.js"></script>
+<!-- 客户信息显示组件
+     接收数据：prop:{info}
+     发送数据：post-customer-info
+-->
+<template id="customerInfoReadOnly">
+    <div>
+        <el-row :gutter="20">
+            <el-col :span="8">
+                <span>身份证号：{{idcard}}</span>
+            </el-col>
+            <el-col :span="8">
+                <span>客户类型：{{customerType}}</span>
+            </el-col>
+            <el-col :span="8">
+                <span>单位名称：{{companyName}}</span>
+            </el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="8">
+                <span>联系人：{{customerName}}</span>
+            </el-col>
+            <el-col :span="8">
+                <span>联系电话：{{phone}}</span>
+            </el-col>
+            <el-col :span="8">
+                <span>e-mail：{{email}}</span>
+            </el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="16">
+                <span>地址：{{address}}</span>
+            </el-col>
+        </el-row>
+    </div>
+</template>
+<script>
+    var customerInfoReadOnly = {
+        template: '#customerInfoReadOnly',
+        data: function () {
+            return {
+                idcard: '',
+                customerType: '',
+                companyName: '',
+                customerName: '',
+                phone: '',
+                email: '',
+                address: ''
+            }
+        },
+        methods: {
+            postInfo: function (){
+                var info = {};
+                this.$emit('post-customer-info',info);
+            }
+        },
+        props: [
+            'info'
+        ],
+        watch: {
+            info() {
+                this.idcard = this.info.idcard;
+                this.customerType = this.info.customerType;
+                this.companyName = this.info.companyName;
+                this.customerName = this.info.customerName;
+                this.phone = this.info.phone;
+                this.email = this.info.email;
+                this.address = this.info.address;
+            }
+        }
+    }
+</script>
+
+<!-- 设备信息显示组件 -->
+<template id="deviceInfoReadOnly">
+    <div>
+        <el-row>
+            <el-col :span="6">
+                <span>品牌：{{brand}}</span>
+            </el-col>
+            <el-col :span="6">
+                <span>产品类型：{{type}}</span>
+            </el-col>
+            <el-col :span="6">
+                <span>型号：{{model}}</span>
+            </el-col>
+            <el-col :span="6">
+                <span>系列号：{{seriesNum}}</span>
+            </el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="6">
+                <span>HDD：{{hdd}}</span>
+            </el-col>
+            <el-col :span="6">
+                <span>内存：{{memory}}</span>
+            </el-col>
+            <el-col :span="6">
+                <span>AC适配器：{{acAdapter}}</span>
+            </el-col>
+            <el-col :span="6">
+                <span>电池：{{battery}}</span>
+            </el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="6">光驱：{{opticalDrive}}</el-col>
+        </el-row>
+    </div>
+</template>
+<script>
+    var deviceInfoReadOnly = {
+        template: '#deviceInfoReadOnly',
+        data: function (){
+            return {
+                brand: '',
+                type: '',
+                model: '',
+                seriesNum: '',
+                hdd: '',
+                memory: '',
+                acAdapter: '',
+                battery: '',
+                opticalDrive: ''
+            }
+        },
+        methods: {
+            postInfo: function (){
+                var info = {};
+                this.$emit('post-device-info',info);
+            }
+        },
+        props: [
+            'info'
+        ],
+        watch: {
+            info() {
+                this.brand = this.info.brand;
+                this.type = this.info.type;
+                this.model = this.info.model;
+                this.seriesNum = this.info.seriesNum;
+                this.hdd = this.info.hdd;
+                this.memory = this.info.memory;
+                this.acAdapter = this.info.acAdapter;
+                this.battery = this.info.battery;
+                this.opticalDrive = this.info.opticalDrive;
+            }
+        }
+    }
+</script>
+
 <!-- 维修任务组件
 
 -->
 <template id="taskInfo">
-    <div>
+    <div @mouseleave="postInfo">
         <el-row :gutter="20">
             <el-col :span="6">
                 <label>分配时间</label>
@@ -94,6 +243,20 @@
                 delayDegree: ''
             }
         },
+        methods: {
+            postInfo: function (){
+                var info = {
+                    distributeTime: this.distributeTime,
+                    repairTime: this.repairTime,
+                    laborCost: this.laborCost,
+                    materialCost: this.materialCost,
+                    detectRecordDescription: this.detectRecordDescription,
+                    repairRecordDescription: this.repairRecordDescription,
+                    status: this.status,
+                    delayDegree: this.delayDegree
+                }
+            }
+        },
         prop: [
             'info'
         ],
@@ -112,6 +275,156 @@
 
     }
 </script>
+<!-- 维修任务过滤器组件 -->
+<template id="maintenanceTaskFilter">
+    <div>
+        <el-row :gutter="20">
+            <el-col :span="3">
+                <el-input v-model="phone" placeholder="移动电话"></el-input>
+            </el-col>
+            <el-col :span="3">
+                <el-input v-model="repairTime" placeholder="报修时间"></el-input>
+            </el-col>
+            <el-col :span="3">
+                <el-input v-model="deviceBrand" placeholder="品牌"></el-input>
+            </el-col>
+            <el-col :span="3">
+                <el-select v-model="deviceType" placeholder="产品类型">
+                    <el-option
+                            v-for="option in deviceTypeOptions"
+                            :key="option.value"
+                            :value="option.value"
+                            :label="option.label"
+                    ></el-option>
+                </el-select>
+            </el-col>
+            <el-col :span="3">
+                <el-select v-model="maintenanceStatus" placeholder="维修状态">
+                    <el-option
+                            v-for="option in statusOptions"
+                            :key="option.value"
+                            :value="option.value"
+                            :label="option.label"
+                    ></el-option>
+                </el-select>
+            </el-col>
+            <el-col :span="3">
+                <el-input v-model="engineer" placeholder="技术人员"></el-input>
+            </el-col>
+            <el-col :span="3">
+                <el-button @click="handleSearch" type="primary">搜索</el-button>
+            </el-col>
+        </el-row>
+        <br>
+        <el-row>
+            <el-col :span="24">
+                <el-table
+                        stripe
+                        :data="maintenanceTaskData"
+                        highlight-current-row
+                        @row-click="handleCurrentChange"
+                        width="100%">
+                    <el-table-column
+                            label="联系人"
+                            prop="customerName"
+                    ></el-table-column>
+                    <el-table-column
+                            label="移动电话"
+                            prop="phone"
+                    ></el-table-column>
+                    <el-table-column
+                            label="报修时间"
+                            prop="repairTime"
+                    ></el-table-column>
+                    <el-table-column
+                            label="产品类型"
+                            prop="deviceType"
+                    ></el-table-column>
+                    <el-table-column
+                            label="品牌"
+                            prop="deviceBrand"
+                    ></el-table-column>
+                    <el-table-column
+                            label="型号"
+                            prop="deviceModel"
+                    ></el-table-column>
+                    <el-table-column
+                            label="系列号"
+                            prop="seriesNum"
+                    ></el-table-column>
+                    <el-table-column
+                            label="维修状态"
+                            prop="status"
+                    ></el-table-column>
+                    <el-table-column
+                            label="技术人员"
+                            prop="engineer"
+                    ></el-table-column>
+                </el-table>
+            </el-col>
+        </el-row>
+    </div>
+</template>
+<script>
+    var maintenanceTaskFilter = {
+        template: '#maintenanceTaskFilter',
+        data: function (){
+            return {
+                phone: '',
+                repairTime: '',
+                deviceBrand: '',
+                deviceType: '',
+                deviceTypeOptions: [{
+                    label: '台式机',
+                    value: '台式机'
+                },{
+                    label: '笔记本',
+                    value: '笔记本'
+                },{
+                    label: '投影仪',
+                    value: '投影仪'
+                },{
+                    label: '打印机',
+                    value: '打印机'
+                },{
+                    label: '其他',
+                    value: '其他'
+                }],
+                maintenanceStatus: '',
+                statusOptions: [{
+                    label: '未分配',
+                    value: '未分配'
+                },{
+                    label: '已分配',
+                    value: '已分配'
+                },{
+                    label: '已维修',
+                    value: '已维修'
+                },{
+                    label: '已撤销',
+                    value: '已撤销'
+                }],
+                engineer: '',
+                maintenanceTaskData: []
+            }
+        },
+        methods: {
+            handleCurrentChange: function (currentRow){
+                this.$emit('post-row',currentRow);
+            },
+            handleSearch: function () {
+                var that = this;
+                var parma = new URLSearchParams();
+                axios.post("/Devices/getServiceRecord",parma).then(
+                    function (response) {
+                        var data = JSON.parse(response.data).data;
+                        that.maintenanceTaskData = data;
+                    }
+                );
+            }
+        }
+    }
+</script>
 <!-- 维护维修信息功能模块
 
 -->
@@ -119,7 +432,27 @@
     <div>
         <el-row>
             <el-col :span="20">
-                <task-info></task-info>
+                <div :style="style.container">
+                    <maintenance-task-filter
+                            @post-row="handleTaskRow"
+                    ></maintenance-task-filter>
+                </div>
+                <div :style="style.container">
+                    <el-row>
+                        <el-col :span="20">
+                            <h3>详情</h3>
+                        </el-col>
+                        <el-col :span="4">
+                            <el-button type="primary" plain size="small" @click="handleSave">保存更改</el-button>
+                        </el-col>
+                    </el-row>
+                    <h4>客户信息</h4>
+                    <customer-info-readonly :info="customerInfoData"></customer-info-readonly>
+                    <h4>设备信息</h4>
+                    <device-info-readonly :info="deviceInfoData"></device-info-readonly>
+                    <h4>维修信息</h4>
+                    <task-info :info="taskInfoData" @post-info="handleTaskInfo"></task-info>
+                </div>
             </el-col>
         </el-row>
     </div>
@@ -128,7 +461,36 @@
     var manipulateTaskInfo = {
         template: '#manipulateTaskInfo',
         components: {
+            'maintenance-task-filter': maintenanceTaskFilter,
+            'customer-info-readonly': customerInfoReadOnly,
+            'device-info-readonly': deviceInfoReadOnly,
             'task-info': taskInfo
+        },
+        data: function (){
+            return {
+                customerInfoData: {},
+                deviceInfoData: {},
+                taskInfoData: {},
+                style: {
+                    container: {
+                        padding: '20px',
+                        boxShadow: '0 2px 12px 0 rgba(0, 0, 0, 0.1)',
+                        margin: '20px'
+                    }
+                },
+            }
+        },
+        methods: {
+            handleTaskRow: function (row){
+                //分发数据
+            },
+            handleTaskInfo: function (info){
+                //接收taskInfo的数据
+                this.taskInfoData = info;
+            },
+            handleSave: function (){
+
+            }
         }
     }
 </script>
