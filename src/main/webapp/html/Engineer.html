@@ -233,6 +233,7 @@
         template: '#taskInfo',
         data: function () {
             return {
+                id: '',
                 distributeTime: '',
                 repairTime: '',
                 laborCost: '',
@@ -246,6 +247,7 @@
         methods: {
             postInfo: function (){
                 var info = {
+                    id: this.id,
                     distributeTime: this.distributeTime,
                     repairTime: this.repairTime,
                     laborCost: this.laborCost,
@@ -254,14 +256,16 @@
                     repairRecordDescription: this.repairRecordDescription,
                     status: this.status,
                     delayDegree: this.delayDegree
-                }
+                };
+                this.$emit('post-info',info);
             }
         },
-        prop: [
+        props: [
             'info'
         ],
         watch: {
             info: function () {
+                this.id = this.info.id;
                 this.distributeTime = this.info.distributeTime;
                 this.repairTime = this.info.repairTime;
                 this.laborCost = this.info.laborCost;
@@ -307,9 +311,6 @@
                             :label="option.label"
                     ></el-option>
                 </el-select>
-            </el-col>
-            <el-col :span="3">
-                <el-input v-model="engineer" placeholder="技术人员"></el-input>
             </el-col>
             <el-col :span="3">
                 <el-button @click="handleSearch" type="primary">搜索</el-button>
@@ -419,6 +420,7 @@
                     function (response) {
                         var data = JSON.parse(response.data).data;
                         that.maintenanceTaskData = data;
+                        console.log(data);
                     }
                 );
             }
@@ -483,13 +485,32 @@
         methods: {
             handleTaskRow: function (row){
                 //分发数据
+                this.customerInfoData = row.customer;
+                this.deviceInfoData = row.device;
+                this.taskInfoData = row.serviceRecord;
+                console.log(this.taskInfoData);
             },
             handleTaskInfo: function (info){
                 //接收taskInfo的数据
                 this.taskInfoData = info;
             },
             handleSave: function (){
+                console.log(this.taskInfoData);
+                var parma = new URLSearchParams();
+                parma.append("id",this.taskInfoData.id);
+                if(this.taskInfoData.distributeTime) parma.append("distributeTime",this.taskInfoData.distributeTime);
+                if(this.taskInfoData.repairTime) parma.append("repairTime",this.taskInfoData.repairTime);
+                if(this.taskInfoData.laborCost) parma.append("laborCost",this.taskInfoData.laborCost);
+                if(this.taskInfoData.materialCost) parma.append("materialCost",this.taskInfoData.materialCost);
+                if(this.taskInfoData.detectRecordDescription) parma.append("detectRecordDescription",this.taskInfoData.detectRecordDescription);
+                if(this.taskInfoData.repairRecordDescription) parma.append("repairRecordDescription",this.taskInfoData.repairRecordDescription);
+                if(this.taskInfoData.status) parma.append("status",this.taskInfoData.status);
+                if(this.taskInfoData.delayDegree) parma.append("delayDegree",this.taskInfoData.delayDegree);
+                axios.post("/Devices/updateServiceRecord",parma).then(
+                    function (response) {
 
+                    }
+                );
             }
         }
     }
