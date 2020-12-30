@@ -294,12 +294,8 @@
         methods: {
             handleCurrentChange: function (currentRow){
                 this.$emit('post-row',currentRow);
-                console.log(currentRow);
                 //为当前维修记录选择维修工程师
-                if(confirm("是否选择"+currentRow.userName+"工程师")==true){
-                    alert(customerInfoReadOnly.data().idcard)
-                    
-                }
+
             }
         },
         mounted() {
@@ -538,6 +534,20 @@
             },
             handleUserRow: function (row){
                 //信息传递给userInfoReadOnly
+                if(confirm("是否选择"+row.userName+"工程师")==true){
+                    var param = new URLSearchParams();
+                    param.append("recordId",this.taskInfoData.id);
+                    param.append("repairManId",row.id);
+                    // this.taskInfoData.repairManId = row.id;
+                    // console.log(this.taskInfoData);
+                    var that = this;
+                    axios.post("/Devices/dispatch",param).then(
+                        function (response) {
+                            var res = JSON.parse(response.data);
+                            alert(res.message);
+                        }
+                    );
+                }
                 //axios
                 this.visible.userFilter.value = false;
             },
