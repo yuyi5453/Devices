@@ -34,8 +34,14 @@ public class RepairRecordServiceImpl extends ServiceImpl<RepairRecordMapper, Rep
     RepairRecordMapper repairRecordMapper;
     @Autowired
     private DeviceService deviceService;
+    /*
+    * 2020-12-30
+    * author:psy
+    * 查找报修记录service
+    * 参数1：page 分页设置和查询结果返回
+    * 参数2：wrapper 条件构造器
+    * */
     @Override
-
     public IPage getRecord(IPage page, Wrapper wrapper) {
         return repairRecordMapper.getRepairRecord(page, wrapper);
     }

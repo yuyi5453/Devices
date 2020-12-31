@@ -35,14 +35,22 @@ public class EditMaintenanceReport {
 
     DeviceService deviceService;
 
+    /*
+    * 2020-12-30
+    * psy
+    * 维护报修记录controller
+    * 参数1：request 接收请求
+    * */
     @RequestMapping("/editMaintenanceReport")
     @ResponseBody
     public String edit(HttpServletRequest request){
+        //更新repairRecord
         RepairRecord repairRecord = repairRecordService.getById(request.getParameter("repairRecordId"));
         repairRecord.setRepairTime(new Date(request.getParameter("reportTime")));
         repairRecord.setExpectedTime(new Date(request.getParameter("estimateCompleteTime")));
         repairRecord.setStatus(Integer.parseInt(request.getParameter("reportStatus")));
         repairRecordService.updateById(repairRecord);
+        //更新deviceRecord
         Device device = deviceService.getById(request.getParameter("deviceId"));
         device.setType(request.getParameter("deviceType"));
         device.setBrand(request.getParameter("deviceBrand"));
