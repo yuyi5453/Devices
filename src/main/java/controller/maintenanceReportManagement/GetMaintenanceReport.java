@@ -20,8 +20,18 @@ public class GetMaintenanceReport {
     @Autowired
     RepairRecordService repairRecordService;
 
+    /*
+    * 2020-12-29
+    * author:psy
+    * 查询报修信息以及关联的客户信息和设备信息
+    * 参数1：customerName 客户姓名
+    * 参数2：phone 客户移动电话
+    * 参数3：repairTime 报修时间
+    * 参数4：currentPage 分页的当前页码
+    * */
     @RequestMapping("/getMaintenanceReport")
     public String get(String customerName, String phone, String repairTime, String currentPage){
+        //设置条件构造器
         QueryWrapper<RepairRecord> wrapper = new QueryWrapper<>();
         if(customerName != null && !customerName.trim().equals("")){
             wrapper.eq("customer_name",customerName);
@@ -32,12 +42,11 @@ public class GetMaintenanceReport {
         if(repairTime != null && !repairTime.trim().equals("")){
             wrapper.eq("repair_time",repairTime);
         }
+        //设置分页
         IPage<RepairRecord> page = new Page<>();
         page.setCurrent(Integer.parseInt(currentPage));
-        //page.setCurrent(1);
         page.setSize(5);
         repairRecordService.getRecord(page, wrapper);
-
         return new RestResult()
                 .setCode(ResultCode.SUCCESS)
                 .setMessage(String.valueOf(page.getTotal()))
