@@ -12,6 +12,7 @@ import util.json.RestResult;
 import util.json.ResultCode;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 
 @RestController
 public class EditTaskInfo {
@@ -20,9 +21,14 @@ public class EditTaskInfo {
 
     @RequestMapping("/updateServiceRecord")
     public String EditTaskInfo(HttpServletRequest request){
-        System.out.println(request.getParameter("id"));
-        System.out.println(request.getParameter("repairTime"));
-//        serviceRecordService.updateTask(serviceRecord);
+        ServiceRecord serviceRecord = new ServiceRecord();
+        serviceRecord.setId(Integer.valueOf(request.getParameter("id")));
+        serviceRecord.setLaborCost(BigDecimal.valueOf(Double.parseDouble(request.getParameter("laborCost")==null?"0":request.getParameter("laborCost"))));
+        serviceRecord.setMaterialCost(BigDecimal.valueOf(Double.parseDouble(request.getParameter("materialCost")==null?"0":request.getParameter("materialCost"))));
+        serviceRecord.setDetectRecordDescription(request.getParameter("detectRecordDescription"));
+        serviceRecord.setRepairRecordDescription(request.getParameter("repairRecordDescription"));
+
+        serviceRecordService.updateById(serviceRecord);
         return new RestResult().setMessage("success").toString();
     }
 

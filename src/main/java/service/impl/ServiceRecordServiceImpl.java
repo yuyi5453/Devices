@@ -57,11 +57,11 @@ public class ServiceRecordServiceImpl extends ServiceImpl<ServiceRecordMapper, S
             hs.put("customerName",m.get("customer_name"));
             hs.put("phone",m.get("phone"));
             hs.put("repairTime",m.get("report_time"));
-            hs.put("deviceTyep",m.get("type"));
+            hs.put("deviceType",m.get("type"));
             hs.put("deviceBrand",m.get("brand"));
             hs.put("deviceModel",m.get("model"));
             hs.put("seriesNum",m.get("series_num"));
-            hs.put("status",m.get("r_status"));
+            hs.put("status",m.get("s_status"));
             if(!StringUtils.isEmpty(m.get("repair_man_id"))){
                 System.out.println(m.get("repair_man_id"));
                 hs.put("engineer",userMapper.selectById(m.get("repair_man_id").toString()).getUserName());
