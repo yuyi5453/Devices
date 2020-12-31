@@ -1024,6 +1024,7 @@
             handleClick: function (){
                 console.log(this.info);
                 axios.post("/Devices/addCustomer",this.info).then(function (response) {
+                    alert("增加成功");
                     console.log(response);
                 })
             }
