@@ -25,8 +25,6 @@ public class AddMaintenanceReport {
 
     @RequestMapping("/addMaintenanceReport")
     public String add(HttpServletRequest request){
-
-        return null;
-
+        return repairRecordService.addRecord(request);
     }
 }
